@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### Spring Boot ###
-.application.yml
+backend/src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
