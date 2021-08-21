@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Folder ###
+image/
+
 ### Spring Boot ###
 backend/src/main/resources/application.yml
 
