@@ -1,5 +1,6 @@
 package com.shimys.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -33,6 +35,11 @@ public class User {
     private String role;
     private String profileUrl;
     private boolean isAvailable;
+
+    @JsonIgnoreProperties({"host"})
+    @OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
+    private List<Challenge> challenges;
+
     private LocalDateTime createDate;
     public void createDate(){
         this.createDate = LocalDateTime.now();
