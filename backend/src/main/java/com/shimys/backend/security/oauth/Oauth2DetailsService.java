@@ -45,9 +45,11 @@ public class Oauth2DetailsService extends DefaultOAuth2UserService {
                     .password(oAuth2UserInfo.getPassword())
                     .name(oAuth2UserInfo.getName())
                     .email(oAuth2UserInfo.getEmail())
+                    .isAvailable(true)
                     .role("ROLE_USER")
                     .build();
 
+            System.out.println(user.toString());
             return new PrincipalDetails(userRepository.save(user), oAuth2User.getAttributes());
         }
 

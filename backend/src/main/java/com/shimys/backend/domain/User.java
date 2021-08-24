@@ -1,6 +1,7 @@
 package com.shimys.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.shimys.backend.util.converter.BooleanToYNConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, unique = true)
+    @Column(length = 100, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -41,6 +42,7 @@ public class User {
     private List<Challenge> challenges;
 
     private LocalDateTime createDate;
+    @PrePersist
     public void createDate(){
         this.createDate = LocalDateTime.now();
     }

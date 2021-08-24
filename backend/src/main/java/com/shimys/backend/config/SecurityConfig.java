@@ -6,11 +6,13 @@ import com.shimys.backend.security.auth.AuthorizationFilter;
 import com.shimys.backend.security.oauth.Oauth2DetailsService;
 import com.shimys.backend.security.oauth.Oauth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -21,6 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final Oauth2DetailsService oauth2DetailsService;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     /**
      * 스프링 시큐리티 설정
