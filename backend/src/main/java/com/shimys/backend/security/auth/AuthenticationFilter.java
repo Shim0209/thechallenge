@@ -6,6 +6,7 @@ import com.shimys.backend.security.jwt.JwtProperties;
 import com.shimys.backend.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -69,12 +70,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        // Authentication 과정에서 발생된 예외를 낚아채서 컨트롤러에서 예외처리 한다.
-        System.out.println("[AuthenticationFilter] - unsuccessfulAuthentication 동작 -> 미구현 메서드");
-//        if(failed.getMessage().equals("자격 증명에 실패하였습니다.")){
-//            response.sendRedirect("/exception/usernamenotfound");
-//        } else {
-//            response.sendError(HttpServletResponse.SC_NOT_FOUND, failed.getMessage());
-//        }
+        if(failed.getClass().equals(BadCredentialsException.class)){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            System.out.println("발견하지 못한 에러 발생 : " + failed.getMessage());
+        }
     }
 }
