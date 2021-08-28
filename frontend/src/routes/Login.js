@@ -1,7 +1,12 @@
 import React from 'react';
+import {useState} from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import styled from "styled-components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import jwt_decode from 'jwt-decode';
 
+/* 디자인 시작 */
 const Container = styled.div`
     background-color: #fafafa;
     width: 100%;
@@ -11,7 +16,6 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
 `;
-
 const LoginBox = styled.div`
     background-color: #fafafa;
     box-shadow: 0px 0px 3px 1px gray;
@@ -25,7 +29,6 @@ const LoginBox = styled.div`
     flex-direction: column;
     align-items: center;
 `;
-
 const LoginTitle = styled.div`
     height: 10%;
     font-size: 35px;
@@ -33,8 +36,8 @@ const LoginTitle = styled.div`
     font-style: italic;
     padding-top: 20px;
 `;
-/* 로그인 폼 */
-const LoginForm = styled.div`
+    /* 로그인 폼 */
+const LoginForm = styled.form`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,12 +48,17 @@ const FormInput = styled.input`
     height: 35px;
     border: 2px solid gray;
     border-radius: 5px;
+    text-align: center;
+    &:nth-child(1){
+        margin-bottom: 10px;
+    }
 `;
 const ErrorMessage = styled.div`
     height: 12px;
     margin: 5px 0;
     font-size: 12px;
     color:red;
+    text-align: center;
 `;
 const FormBtn = styled.button`
     cursor: pointer;
@@ -65,14 +73,14 @@ const FormBtn = styled.button`
         box-shadow: 0px 0px 1px 1px #0095f6;
     }
 `;
-/* horizon */
+    /* horizon */
 const Horizon = styled.div`
     border-top: 1px solid gray;
     height: 1px;
     width: 100%;
     margin-bottom:10px;
 `;
-/* Oauth */
+    /* Oauth */
 const LoginOAuth = styled.div`
     display: flex;
     flex-direction: column;
@@ -111,7 +119,7 @@ const OAuthImg = styled.img`
 const OauthLink = styled.a`
     margin-left: 65px;
 `;
-/* Auth */
+    /* Signup */
 const LoginSignup = styled.div``;
 const SignupBtn = styled.button`
     cursor: pointer;
@@ -125,40 +133,93 @@ const SignupBtn = styled.button`
         box-shadow: 0px 0px 1px 1px #0095f6;
     }
 `;
+/* 디자인 끝 */
 
+/* 컴포넌트 */
 const Login = (props) => {
+    const [state, setState] = useState({
+        username: null,
+        password: null
+    });
+    const [error, setError] = useState({
+        message: null
+    });
+
+    const onChange = (event) => {
+        if(event.target.title === 'username'){
+            setState({
+                ...state,
+                username: event.target.value
+            })
+        } else {
+            setState({
+                ...state,
+                password: event.target.value
+            })
+        }
+    }
+
+    const data = {
+        username: state.username,
+        password: state.password
+    }
+
+    const handleLogin = (event) => {
+        event.preventDefault();
+        axios.post("http://localhost:8080/login", data
+        ).then((responseData)=>{
+            console.log('responseData',responseData);
+            console.log('authorization',responseData.headers.authorization);
+            const accessToken = responseData.headers.authorization;
+            const jwtToken = accessToken.replace('Bearer','');
+            const decoded = jwt_decode(jwtToken); 
+            const expiredTime = decoded.exp+'000';
+            console.log('expiredTime',expiredTime);
+
+            localStorage.setItem('AccessToken', responseData.headers.authorization);
+            localStorage.setItem('ExpiredTime', expiredTime);
+            
+            // home 페이지로 이동
+            props.history.push("/home");
+        }).catch((error)=>{
+            console.log(error.message);
+            setError({
+                message: '아이디 또는 비밀번호가 잘못되었습니다.'
+            })
+        });
+    }
+
     return (
         <Container>
             <LoginBox>
                 <LoginTitle>Login</LoginTitle>
-                <LoginForm>
-                    <FormInput type="text" placeholder="Username" />
-                    <ErrorMessage></ErrorMessage>
-                    <FormInput type="password" placeholder="Password" />
-                    <ErrorMessage></ErrorMessage>
+                <LoginForm onSubmit={handleLogin}>
+                    <FormInput type="text" placeholder=" Username" title="username" onChange={onChange} />
+                    <FormInput type="password" placeholder=" Password" title="password" onChange={onChange} />
+                    <ErrorMessage>{error.message}</ErrorMessage>
                     <FormBtn>로그인</FormBtn>
                 </LoginForm>
                 <Horizon></Horizon>
                 <LoginOAuth>
                     <OAuthItem>
                         <FontAwesomeIcon icon={["fab","google-plus-square"]} size="2x" />
-                        <OauthLink>Google 로그인</OauthLink>
+                        <OauthLink href="http://localhost:8080/oauth2/authorization/google" >Google 로그인</OauthLink>
                     </OAuthItem>
                     <OAuthItem>
                         <FontAwesomeIcon icon={["fab","facebook-square"] } size="2x" />
-                        <OauthLink>Facebook 로그인</OauthLink>
+                        <OauthLink href="http://localhost:8080/oauth2/authorization/facebook" >Facebook 로그인</OauthLink>
                     </OAuthItem>
                     <OAuthItem>
                         <OAuthImg src="https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1504499304/in36bktetqoapibgeabo.png"></OAuthImg>
-                        <OauthLink>Naver 로그인</OauthLink>
+                        <OauthLink href="http://localhost:8080/oauth2/authorization/naver" >Naver 로그인</OauthLink>
                     </OAuthItem>
                     <OAuthItem>
                         <OAuthImg src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2vWAECT2WzkfKyvodaPIdO3r4dkhSxp1DpzoQq9PwZ_KyBSgCkRGk2JbOYZLOPg_QhPQ&usqp=CAU"></OAuthImg>
-                        <OauthLink>Kakao 로그인</OauthLink>
+                        <OauthLink href="http://localhost:8080/oauth2/authorization/kakao">Kakao 로그인</OauthLink>
                     </OAuthItem>
                 </LoginOAuth>
                 <LoginSignup>
-                    <p>계정이 없으신가요?  <SignupBtn>가입하기</SignupBtn></p>
+                    <Link to="/signup"><p>계정이 없으신가요?  <SignupBtn>가입하기</SignupBtn></p></Link>
                 </LoginSignup>
             </LoginBox>
         </Container>
