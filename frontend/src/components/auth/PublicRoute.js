@@ -12,7 +12,7 @@ import verifJwt from 'components/auth/verifJwt';
 const PublicRoute = ({component: Component, restricted, ...rest}) => (
     <Route {...rest} render={props => (
         verifJwt() && restricted ?
-        <Redirect to="/home" /> :
+        <Redirect to="/" /> :
         <Component {...props} />
     )} />
 );

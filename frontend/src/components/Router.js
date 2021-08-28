@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
+import {BrowserRouter as Router, Redirect} from "react-router-dom";
 
 import PrivateRoute from "components/auth/PrivateRoute";
 import PublicRoute from "components/auth/PublicRoute";
@@ -12,7 +12,7 @@ export default () => (
     
     <Router>
         <>
-            <Route path="/" exact component={Home} />
+            <PublicRoute path="/" restricted={false} component={Home} />
             <PublicRoute path="/login" exact restricted={true} component={Login} />
             <PrivateRoute path="/logout" exact component={Logout} />
             <Redirect from="*" to="/" />
