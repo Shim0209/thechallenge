@@ -125,18 +125,6 @@ window.addEventListener('mouseup', modalEvent);
 
 const modalHandler = (e) => {
     document.getElementsByClassName("menuModal")[0].style.display = 'block';
-
-    // if(verifJwt()){
-    //     document.getElementsByClassName("loginLink")[0].style.display = 'none';
-    //     document.getElementsByClassName("signupLink")[0].style.display = 'none';
-    //     document.getElementsByClassName("logoutLink")[0].style.display = 'block';
-    //     document.getElementsByClassName("mandaLink")[0].style.display = 'block';
-    // } else {
-    //     document.getElementsByClassName("loginLink")[0].style.display = 'block';
-    //     document.getElementsByClassName("signupLink")[0].style.display = 'block';
-    //     document.getElementsByClassName("logoutLink")[0].style.display = 'none';
-    //     document.getElementsByClassName("mandaLink")[0].style.display = 'none';
-    // }
 }
 
 
