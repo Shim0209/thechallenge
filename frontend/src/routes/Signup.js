@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState} from 'react';
+import React, {useState}  from 'react';
 import { Link } from 'react-router-dom';
 import { authApi } from 'api';
 import styled from "styled-components";
@@ -298,11 +297,6 @@ const Signup = (props) => {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-
-        console.log('state',state);
-        console.log('valid',valid);
-        console.log('error',error);
-        console.log('check',check);
 
         const form = new FormData();
         form.append("username", state.username);
