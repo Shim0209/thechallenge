@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -29,5 +26,15 @@ public class AuthController {
         User userEntity = authService.회원가입(user);
 
         return new ResponseEntity<>(new CommonResponseDto<>(1, "회원가입 성공", userEntity.getId()), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/duplication")
+    public ResponseEntity<?> duplicationCheckUsername(@RequestParam String username){
+        User userEntity = userRepository.findByUsername(username);
+
+        if(userEntity != null) {
+            return new ResponseEntity<>(new CommonResponseDto<>(-1,"중복된 아이디 입니다.",username), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new CommonResponseDto<>(1,"사용할 수 있는 아이디 입니다.",username), HttpStatus.OK);
     }
 }

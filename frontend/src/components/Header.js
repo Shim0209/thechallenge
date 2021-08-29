@@ -16,6 +16,7 @@ const Header = styled.div`
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
+    box-shadow: 0px 0px 3px 1px gray;
     z-index: 100;
     position: relative; /* 이게 있어야 다른 컴포넌트와 안겹침 */
 `;

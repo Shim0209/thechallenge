@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { authApi } from 'api';
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import jwt_decode from 'jwt-decode';
@@ -164,29 +165,25 @@ const Login = (props) => {
         password: state.password
     }
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        axios.post("http://localhost:8080/login", data
-        ).then((responseData)=>{
-            console.log('responseData',responseData);
-            console.log('authorization',responseData.headers.authorization);
-            const accessToken = responseData.headers.authorization;
+
+        try{
+            const {headers:{authorization}} = await authApi.login(data);
+            const accessToken = authorization;
             const jwtToken = accessToken.replace('Bearer','');
             const decoded = jwt_decode(jwtToken); 
             const expiredTime = decoded.exp+'000';
-            console.log('expiredTime',expiredTime);
 
-            localStorage.setItem('AccessToken', responseData.headers.authorization);
+            localStorage.setItem('AccessToken', authorization);
             localStorage.setItem('ExpiredTime', expiredTime);
-            
-            // home 페이지로 이동
-            props.history.push("/home");
-        }).catch((error)=>{
-            console.log(error.message);
+
+            props.history.push("/");
+        } catch(e){
             setError({
                 message: '아이디 또는 비밀번호가 잘못되었습니다.'
             })
-        });
+        }
     }
 
     return (

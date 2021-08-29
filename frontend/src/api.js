@@ -28,6 +28,8 @@ export const authApi = {
             username: username
         }
     }),
+
+    login:(data) => api.post("login", data),
 }
 export const utilApi = {
     // 이미지 업로드
