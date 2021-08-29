@@ -178,13 +178,13 @@ export default withRouter(({ location: {pathname}}) => (
             <MenuHorizon></MenuHorizon>
             <MenuList>
                 <ListItem>
-                    {verifJwt() ? '' : <ListA><SLink to="/login">Login</SLink> <FontAwesomeIcon icon={["fas","chevron-right"]} /></ListA>}
+                    {verifJwt() ? '' : <ListA><SLink to="/login">Login <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>}
                 </ListItem>
                 <ListItem>
-                    {verifJwt() ? <ListA>Logout <FontAwesomeIcon icon={["fas","chevron-right"]} /></ListA> : ''}
+                    {verifJwt() ? <ListA><SLink to="/logout">Logout <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA> : ''}
                 </ListItem>
                 <ListItem>
-                    {verifJwt() ? '' : <ListA><SLink to="/signup">Signup</SLink> <FontAwesomeIcon icon={["fas","chevron-right"]} /></ListA>}
+                    {verifJwt() ? '' : <ListA><SLink to="/signup">Signup <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>}
                 </ListItem>
                 <ListItem>
                     {verifJwt() ? <ListA>Mandalart <FontAwesomeIcon icon={["fas","chevron-right"]} /></ListA> : ''}
