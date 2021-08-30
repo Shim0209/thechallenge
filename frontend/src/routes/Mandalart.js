@@ -11,10 +11,11 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Home = (props) => {
+const Mandalart = (props) => {
+    
     return (
-        <Container>Home</Container>
+        <Container>Mandalart</Container>
     );
 }
 
-export default Home;
+export default Mandalart;

@@ -11,10 +11,10 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Home = (props) => {
+const Dashboard = (props) => {
     return (
-        <Container>Home</Container>
-    );
-}
+        <Container>Dashboard</Container>
+    )
+};
 
-export default Home;
+export default Dashboard;

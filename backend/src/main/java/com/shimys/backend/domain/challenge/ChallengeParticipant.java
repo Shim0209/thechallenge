@@ -33,5 +33,7 @@ public class ChallengeParticipant {
     @ManyToOne(fetch = FetchType.EAGER)
     private Challenge challenge;
 
+    private Integer min;
+    private Integer max;
     private boolean isAvailable;
 }

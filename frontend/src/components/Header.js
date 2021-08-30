@@ -88,7 +88,7 @@ const HeaderProfile = styled.a`
     text-align: center;
     border: 1px solid gray;
     border-radius: 10px;
-    width: 30%;
+    width: 50%;
     align-self: center;
     padding: 5px;
 `;
@@ -99,9 +99,9 @@ const MenuList = styled.ul`
     display: flex;
     flex-direction: column;
     align-content: center;
-    justify-content: center;
+    justify-content: space-around;
     height: 55%;
-    gap: 10px;
+    padding: 25px 0;
 `;
 const ListItem = styled.li`
     padding: 0 15px;
@@ -142,10 +142,10 @@ export default withRouter(({ location: {pathname}}) => (
                         <SLink to="/">Home</SLink>
                     </NavLi>
                     <NavLi current={pathname === "/challenge"}>
-                        <SLink to="/challenge">Challenge</SLink>
+                        <SLink to="/challengeList">Challenge</SLink>
                     </NavLi>
-                    <NavLi current={pathname === "/dashboard"}>
-                        <SLink to="/dashboard">Dashboard</SLink>
+                    <NavLi current={pathname === "/challenge"}>
+                        <SLink to="/challengeCreate">Create</SLink>
                     </NavLi>
                 </NavUl>
             </HeaderNav>
@@ -160,23 +160,31 @@ export default withRouter(({ location: {pathname}}) => (
                 <HeaderTitle>Shim</HeaderTitle>
                 <HeaderEmail>sim@gamil.com</HeaderEmail>
                 <HeaderProfile>
-                    <SLink to="/profile">Profile</SLink>
+                    <SLink to="/dashboard">Dashboard</SLink>
                 </HeaderProfile>
             </MenuHeader>
             <MenuHorizon></MenuHorizon>
             <MenuList>
-                <ListItem>
-                    {verifJwt() ? '' : <ListA><SLink to="/login">Login <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>}
-                </ListItem>
-                <ListItem>
-                    {verifJwt() ? <ListA><SLink to="/logout">Logout <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA> : ''}
-                </ListItem>
-                <ListItem>
-                    {verifJwt() ? '' : <ListA><SLink to="/signup">Signup <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>}
-                </ListItem>
-                <ListItem>
-                    {verifJwt() ? <ListA>Mandalart <FontAwesomeIcon icon={["fas","chevron-right"]} /></ListA> : ''}
-                </ListItem>
+                {verifJwt() 
+                ? 
+                    <>
+                        <ListItem>
+                            <ListA><SLink to="/logout">Logout <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                        </ListItem>
+                        <ListItem>
+                            <ListA><SLink to="/mandalart">Mandalart <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                        </ListItem>
+                    </>
+                :  
+                    <>
+                        <ListItem>
+                            <ListA><SLink to="/login">Login <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                        </ListItem>
+                        <ListItem>
+                            <ListA><SLink to="/signup">Signup <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                        </ListItem>
+                    </>
+                }
             </MenuList>
         </MenuModal>
     </>     

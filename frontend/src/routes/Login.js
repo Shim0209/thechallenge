@@ -10,7 +10,7 @@ import jwt_decode from 'jwt-decode';
 const Container = styled.div`
     background-color: #fafafa;
     width: 100%;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 120px);
 
     display: flex;
     justify-content: center;
@@ -100,10 +100,10 @@ const OAuthItem = styled.div`
     color:white;
     font-weight:600;
     &:nth-child(1){
-        background-color: #c21306;
+        background-color: #f72121;
     }
     &:nth-child(2){
-        background-color: #072ab9;
+        background-color: #3b5998;
     }
     &:nth-child(3){
         background-color: #04ad37;

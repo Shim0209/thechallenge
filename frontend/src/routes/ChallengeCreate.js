@@ -11,10 +11,10 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Home = (props) => {
+const ChallengeCreate = (props) => {
     return (
-        <Container>Home</Container>
-    );
+        <Container>Create</Container>
+    )
 }
 
-export default Home;
+export default ChallengeCreate;
