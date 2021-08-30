@@ -20,8 +20,8 @@ public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;   // 타이틀
-    private String mainImageUrl;    // 메인이미지
+    private String title;   // 타이틀 5자이상
+    private String mainImageUrl;    // 메인이미지 2mb
     private String status;  // 대기, 진행, 종료
     private LocalDateTime startDate;    // 시작날짜
     private LocalDateTime endDate;      // 끝날짜
