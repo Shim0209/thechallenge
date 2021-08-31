@@ -41,13 +41,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             // 1. username, password를 받는다.
             ObjectMapper objectMapper = new ObjectMapper();
             User user = objectMapper.readValue(request.getInputStream(), User.class);
-
             // 2. username, password로 authenticationToken 생성
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
-
             // 3. authenticationToken토큰으로 authentication 생성
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
             // 4. 반환시 자동으로 SecurityContext에 담는다.
             return authentication;
         } catch (IOException e) {
