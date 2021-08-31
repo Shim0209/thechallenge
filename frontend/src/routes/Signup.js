@@ -1,5 +1,4 @@
 import React, {useState}  from 'react';
-import { Link } from 'react-router-dom';
 import { authApi } from 'api';
 import styled from "styled-components";
 

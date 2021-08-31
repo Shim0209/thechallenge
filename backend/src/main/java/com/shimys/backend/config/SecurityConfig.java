@@ -54,11 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 리소스 권한 설정
         http
             .authorizeRequests()
-                .antMatchers("/auth/signup","/auth/duplication").permitAll() // 해당 요청은 인증없이 접근가능
+                .antMatchers("/auth/signup","/auth/duplication","challenge/create").permitAll() // 해당 요청은 인증없이 접근가능
                 .antMatchers().hasAnyRole() // 특정 권한을 가진 사용자만 접근가능
                 .antMatchers().hasAnyRole() // 특정 권한을 가진 사용자만 접근가능
                 .antMatchers().hasAnyRole() // 특정 권한을 가진 사용자만 접근가능
                 .anyRequest().authenticated(); // 위의 요청 이외의 모든 요청은 인증된 사용자만 접근가능
+
 
         // oauth2 설정
         http

@@ -17,8 +17,6 @@ public class ValidationAdvice {
 
     @Around("execution(* com.shimys.backend.controller.*Controller.*(..))")
     public Object advice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        System.out.println("유효성검사 AOP 동작");
-
         Object[] args = proceedingJoinPoint.getArgs();
         for(Object arg : args){
             if(arg instanceof BindingResult){

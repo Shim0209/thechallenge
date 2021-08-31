@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import styled from "styled-components";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { challengeApi } from 'api';
 
 const Container = styled.div`
     background-color: #fafafa;
@@ -15,16 +16,25 @@ const Container = styled.div`
 const CreateBox = styled.div`
     background-color: #fafafa;
     box-shadow: 0px 0px 3px 1px gray;
-    width: 350px;
-    height: 630px;
+    width: 600px;
+    height: 600px;
     border-radius:20px;
     padding:0 40px 20px 40px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    justify-content: space-space-around;
+    justify-content: space-around;
     align-items: center;
     padding: 30px;
+`;
+const LeftBox = styled.div`
+    border: 1px solid red;
+    width: 245px;
+    height: 500px;
+`;
+const RightBox = styled.div`
+    border: 1px solid red;
+    width: 245px;
+    height: 500px;
 `;
 const CreateTitle = styled.div`
     font-size: 35px;
@@ -56,6 +66,7 @@ const FormInput = styled.input`
 const FormLabel = styled.label`
     margin-top: 10px;
 `;
+const PreviewImg = styled.img``;
 const FileLabel = styled.label`
     display: inline-block;
     background-color: white;
@@ -70,9 +81,10 @@ const FormDateBox = styled.div`
 const DateBox = styled.div`
     border: 2px solid gray;
     border-radius: 5px;
-    height: 150px;
+    height: 120px;
     overflow: scroll;
     box-sizing: border-box;
+    padding: 10px;
 `;
 const DateItem = styled.div`
     display: flex;
@@ -87,12 +99,21 @@ const DateSelect = styled.select`
 
     }
 `;
+const CreateBtn = styled.div`
+
+`;
 
 
 
 const ChallengeCreate = (props) => {
+    // challenge
+    const [state, setState] = useState({
+        title:null,
+        image:null
+    })
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState();
+    // assignment 
     const [dateRange, setDateRange] = useState([]);
     const [assignment, setAssignment] = useState([]);
 
@@ -129,7 +150,6 @@ const ChallengeCreate = (props) => {
             // 챌린저 저장 버튼 활성화 변경
         }
     }
-
     /* 체크박스 true시 셀렉트박스 활성화 */
     const selectHandler = (e) => {
         const id = e.target.id.replace('c-','');
@@ -145,7 +165,6 @@ const ChallengeCreate = (props) => {
             document.getElementById('s-'+id).value = false;
         }
     }
-
     /* 셀렉트박스에서 옵션 선택시 useState에 저장 -> challengeAssignment 객체생성시 사용 */
     const assignmentHandler = (e) => {
         const id = e.target.id.replace('s-','');
@@ -176,23 +195,83 @@ const ChallengeCreate = (props) => {
         }
     }
 
-    console.log(startDate);
-    console.log(endDate);
-    console.log(dateRange);
-    console.log(assignment);
+    const onSaveTitle = (e) => {
+        console.log(e.target.value);
+        setState({
+            ...state,
+            title: e.target.value
+        })
+    }
+    const onSaveFile = (e) => {
+        let imageData = e.target.files[0];
+        // 이미지파일인지 검사
+        // if(imageData.type.match("image.*")){
+        //     // 경고
+        //     alert("이미지 파일만 등록할 수 있습니다.");
+
+        //     // 이미지 input null 만들어야함.
+            
+        //     return;
+        // }
+
+        // 2MB이상 검사
+        if(imageData.size >= 2097152){
+            // 경고
+            alert("2MB 이상의 이미지는 등록할 수 없습니다.");
+            
+            // 이미지 input null 만들어야함.
+
+            return;
+        }
+
+        // 미리보기
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById("imgPreview").src = e.target.result;
+        }
+        reader.readAsDataURL(imageData);
+
+        // state 저장
+        setState({
+            ...state,
+            image: imageData
+        })
+    }
+    // 
+    const createChallenge = async(e) => {
+        e.preventDefault();
+        const form = new FormData();
+        form.append("title", state.title);
+        form.append("image", state.image);
+        form.append("startDate", startDate);
+        form.append("endDate", endDate);
+        form.append("assignment", JSON.stringify(assignment));
+
+        // 타이틀, 이미지 유효성, null 체크 만들어야함.
+
+        const result = await challengeApi.create(form);
+        console.log('챌린지 생성 결과',result);
+    }
 
     return (
         <Container>
             <CreateBox>
-                <CreateTitle>New Challenge</CreateTitle>
-                <CreateForm>
+                <LeftBox>
+                    <CreateTitle>New Challenge</CreateTitle>
+                    <CreateForm>
                         <FormLabel>Challenge Title</FormLabel>
-                        <FormInput type="text" />
+                        <FormInput onChange={onSaveTitle} type="text" name="title" />
                         <FormLabel>Challenge Image</FormLabel>
                         <FileLabel htmlFor="fileInput">챌린지의 대표 이미지 등록</FileLabel>
-                        <FormInput type="file" id="fileInput" />
-                        <FormLabel>Challenge Date Range</FormLabel>
-                        <FormDateBox>
+                        <FormInput onChange={onSaveFile} type="file" name="image" id="fileInput" />
+                        <PreviewImg src="https://www.penworthy.com/Image/Getimage?id=C:\Repositories\Common\About%20Us\Slide1.jpg" id="imgPreview"></PreviewImg>
+                        <FormLabel>Challenge Tag</FormLabel>
+
+                    </CreateForm>
+                </LeftBox>
+                <RightBox>
+                    <FormLabel>Challenge Date Range</FormLabel>
+                    <FormDateBox>
                             <DatePicker 
                                 minDate={tMinDate}
                                 selected={startDate}
@@ -237,7 +316,8 @@ const ChallengeCreate = (props) => {
                             }
                             </DateBox>
                         </FormDateBox>
-                    </CreateForm>
+                    <CreateBtn onClick={createChallenge}>생성</CreateBtn>
+                </RightBox>
             </CreateBox>
         </Container>
     )
