@@ -11,20 +11,20 @@ const fileConfig = {
         'Authorization': localStorage.getItem('AccessToken')
     }
 }
-// 인증이 필요한 요청에 사용
-const authConfig = {
-    headers: {
-        'Authorization': localStorage.getItem('AccessToken')
-    }
-}
+// // 인증이 필요한 요청에 사용
+// const authConfig = {
+//     headers: {
+//         'Authorization': localStorage.getItem('AccessToken')
+//     }
+// }
 
-// json 전송시 사용
-const jsonConfig = {
-    headers: {
-        'Content-Type': 'Application/json',
-        'Authorization': localStorage.getItem('AccessToken')
-    }
-}
+// // json 전송시 사용
+// const jsonConfig = {
+//     headers: {
+//         'Content-Type': 'Application/json',
+//         'Authorization': localStorage.getItem('AccessToken')
+//     }
+// }
 
 export const authApi = {
     // 회원가입

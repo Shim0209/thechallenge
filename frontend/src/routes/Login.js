@@ -121,7 +121,8 @@ const OauthLink = styled.a`
 `;
     /* Signup */
 const LoginSignup = styled.div``;
-const SignupBtn = styled.button`
+const SLink = styled(Link)`
+    padding: 5px;
     cursor: pointer;
     height: 20px;
     background-color: #fafafa;
@@ -215,7 +216,7 @@ const Login = (props) => {
                     </OAuthItem>
                 </LoginOAuth>
                 <LoginSignup>
-                    <Link to="/signup"><p>계정이 없으신가요?  <SignupBtn>가입하기</SignupBtn></p></Link>
+                    <p>계정이 없으신가요? <SLink to="/signup">가입하기</SLink></p>
                 </LoginSignup>
             </LoginBox>
         </Container>

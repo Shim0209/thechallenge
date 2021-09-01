@@ -200,7 +200,7 @@ const Signup = (props) => {
                 regExp = /^[가-힣a-zA-Z]+$/; //한글, 영문만 
                 break;
             case 'email':
-                regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+                regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
                 break;
         }
 

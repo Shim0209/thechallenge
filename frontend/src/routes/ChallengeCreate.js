@@ -172,6 +172,7 @@ const ChallengeCreate = (props) => {
         const option =  e.target.value;
         // useState 저장방식 -> id, day, option
         let sw = false;
+        // eslint-disable-next-line array-callback-return
         assignment.map(obj => {
             if(obj.id === id){
                 sw = true;
@@ -187,6 +188,7 @@ const ChallengeCreate = (props) => {
                 }
             ])
         } else {
+            // eslint-disable-next-line array-callback-return
             assignment.map(obj => {
                 if(obj.id === id){
                     obj.option = option
@@ -204,6 +206,9 @@ const ChallengeCreate = (props) => {
     }
     const onSaveFile = (e) => {
         let imageData = e.target.files[0];
+
+        console.log("파일 타입"+imageData.type);
+        console.log(e);
         // 이미지파일인지 검사
         // if(imageData.type.match("image.*")){
         //     // 경고

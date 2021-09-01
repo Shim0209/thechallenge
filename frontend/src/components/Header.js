@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -44,6 +44,7 @@ const NavLi = styled.li`
 `;
 const SLink = styled(Link)`
     font-weight: 500;
+    
 `;
 const HeaderMenu = styled.div`
     padding-right: 20px;
@@ -83,7 +84,7 @@ const HeaderEmail = styled.div`
     font-size: 15px;
     color: gray;
 `;
-const HeaderProfile = styled.a`
+const HeaderProfile = styled.div`
     cursor: pointer;
     text-align: center;
     border: 1px solid gray;
@@ -91,6 +92,11 @@ const HeaderProfile = styled.a`
     width: 50%;
     align-self: center;
     padding: 5px;
+    &:hover{
+        background-color: black;
+        color: white;
+        border: 1px solid black;
+    }
 `;
 const MenuHorizon = styled.div`
     border-bottom: 1px solid gray;
@@ -106,17 +112,14 @@ const MenuList = styled.ul`
 const ListItem = styled.li`
     padding: 0 15px;
 `;
-const ListA = styled.a`
-    font-style: oblique;
-    cursor: pointer;
-    padding: 2px 5px;
-    border-radius: 5px;
-    font-size: 15px;
-    &:hover {
+const ListLink = styled.div`
+    padding: 5px;
+    &:hover{
         background-color: black;
         color: white;
     }
 `;
+
 /* 브라우저 아무곳이나 클릭해도 모달창 닫히도록 */
 const modalEvent = (e) => {
     document.getElementsByClassName("menuModal")[0].style.display = 'none';
@@ -141,10 +144,10 @@ export default withRouter(({ location: {pathname}}) => (
                     <NavLi current={pathname === "/"}>
                         <SLink to="/">Home</SLink>
                     </NavLi>
-                    <NavLi current={pathname === "/challenge"}>
+                    <NavLi current={pathname === "/challengeList"}>
                         <SLink to="/challengeList">Challenge</SLink>
                     </NavLi>
-                    <NavLi current={pathname === "/challenge"}>
+                    <NavLi current={pathname === "/challengeCreate"}>
                         <SLink to="/challengeCreate">Create</SLink>
                     </NavLi>
                 </NavUl>
@@ -169,19 +172,19 @@ export default withRouter(({ location: {pathname}}) => (
                 ? 
                     <>
                         <ListItem>
-                            <ListA><SLink to="/logout">Logout <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                            <SLink to="/logout"><ListLink>Logout</ListLink></SLink>
                         </ListItem>
                         <ListItem>
-                            <ListA><SLink to="/mandalart">Mandalart <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                            <SLink to="/mandalart"><ListLink>Mandalart</ListLink></SLink>
                         </ListItem>
                     </>
                 :  
                     <>
                         <ListItem>
-                            <ListA><SLink to="/login">Login <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                            <SLink to="/login"><ListLink>Login</ListLink></SLink>
                         </ListItem>
                         <ListItem>
-                            <ListA><SLink to="/signup">Signup <FontAwesomeIcon icon={["fas","chevron-right"]} /></SLink></ListA>
+                            <SLink to="/signup"><ListLink>Signup</ListLink></SLink>
                         </ListItem>
                     </>
                 }
