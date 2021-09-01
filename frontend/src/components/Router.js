@@ -31,7 +31,6 @@ export default () => (
             <PrivateRoute path="/challengeCreate" exact component={ChallengeCreate} />
             <PublicRoute path="/oauth2/redirect" exact restricted={true} component={Oauth2Redirect} />
             <Redirect from="*" to="/" />
-            <Footer />
         </>
     </Router>
 )

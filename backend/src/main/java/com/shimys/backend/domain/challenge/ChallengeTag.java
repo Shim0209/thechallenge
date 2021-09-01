@@ -22,7 +22,7 @@ import javax.persistence.*;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "challengeTags_uk",
-                        columnNames = {"tagName","challengeId"}
+                        columnNames = {"tag","challengeId"}
                 )
         }
 )
@@ -31,7 +31,7 @@ public class ChallengeTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tagName;
+    private String tag;
 
     // ManyToOne
     @JsonIgnoreProperties({"tags"})

@@ -7,33 +7,36 @@ import { challengeApi } from 'api';
 const Container = styled.div`
     background-color: #fafafa;
     width: 100%;
-    height: calc(100vh - 120px);
-
+    height: calc(100vh - 60px);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 `;
 const CreateBox = styled.div`
     background-color: #fafafa;
     box-shadow: 0px 0px 3px 1px gray;
-    width: 600px;
-    height: 600px;
+
+    width: 1000px;
+    height:600px;
     border-radius:20px;
-    padding:0 40px 20px 40px;
+    padding:50px 40px 10px 40px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    padding: 30px;
 `;
 const LeftBox = styled.div`
-    border: 1px solid red;
-    width: 245px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
     height: 500px;
 `;
 const RightBox = styled.div`
-    border: 1px solid red;
-    width: 245px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
     height: 500px;
 `;
 const CreateTitle = styled.div`
@@ -53,38 +56,95 @@ const FormInput = styled.input`
     border: 2px solid gray;
     border-radius: 5px;
     text-align: center;
-    &:nth-child(5){
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0,0,0,0);
-        border: 0;
-    }
+`;
+const FormInputHidden = styled.input`
+    border: 2px solid gray;
+    border-radius: 5px;
+    text-align: center;
+    
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+    
 `;
 const FormLabel = styled.label`
     margin-top: 10px;
 `;
-const PreviewImg = styled.img``;
+const PreviewBox = styled.div`
+    border-left: 2px solid gray;
+    border-right: 2px solid gray;
+    width: inherit;
+    height: 400px;
+    overflow: scroll;
+`;
+const PreviewImg = styled.img`
+    width: inherit;
+`;
 const FileLabel = styled.label`
     display: inline-block;
     background-color: white;
     padding: 10px;
     border: 2px solid gray;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     cursor: pointer;
 `;
-const FormDateBox = styled.div`
-    
+const TagInput = styled.input`
+    height: 35px;
+    border: 2px solid gray;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    text-align: center;
 `;
-const DateBox = styled.div`
+const TagBox = styled.div`
+    width: inherit;
+    height: 78px;
+    border: 2px solid gray;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    overflow-y: scroll;
+`;
+const TagItemBox = styled.div`
+    /* grid 방식 */
+    display: grid;
+    grid-template-columns: repeat(5, minmax(30px, 1fr));
+    grid-row: 20px;
+    padding: 10px;
+    text-align: center;
+    gap: 2px;
+`;
+const TagItem = styled.div`
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #0094f6;
+    border-radius: 5px;
+    color: #0094f6;
+    overflow-x: scroll;
+    &:hover{
+        background-color: #0094f6;
+        border: 1px solid #0094f6;
+        color: white;
+    }
+`;
+const FormDateBox = styled.div`
+    display: flex;
     border: 2px solid gray;
     border-radius: 5px;
-    height: 120px;
+    height: 269px;
+`;
+const DateBox = styled.div`
+    height: 265px;
     overflow: scroll;
+    overflow-y: scroll;
     box-sizing: border-box;
-    padding: 10px;
+    width: 200px;
+    padding: 5px;
+    font-size: 11px;
 `;
 const DateItem = styled.div`
     display: flex;
@@ -100,9 +160,19 @@ const DateSelect = styled.select`
     }
 `;
 const CreateBtn = styled.div`
-
+    cursor: pointer;
+    border: 2px solid #0094f6;
+    color: #0094f6;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    &:hover{
+        background-color: #0094f6;
+        color: white;
+    }
 `;
-
 
 
 const ChallengeCreate = (props) => {
@@ -116,6 +186,7 @@ const ChallengeCreate = (props) => {
     // assignment 
     const [dateRange, setDateRange] = useState([]);
     const [assignment, setAssignment] = useState([]);
+    const [tag, setTag] = useState([]);
 
     // 당일 날짜까지 비활성화 하기 위함
     let tMinDate = new Date();
@@ -133,7 +204,6 @@ const ChallengeCreate = (props) => {
         }
         setDateRange(subjectList);
     }
-
     const onChange = (dates) => {
         const [start, end] = dates;
         // 당일 날짜가 start에 포함된 경우 end날짜를 start에 넣어준다.
@@ -196,7 +266,6 @@ const ChallengeCreate = (props) => {
             })
         }
     }
-
     const onSaveTitle = (e) => {
         console.log(e.target.value);
         setState({
@@ -206,53 +275,71 @@ const ChallengeCreate = (props) => {
     }
     const onSaveFile = (e) => {
         let imageData = e.target.files[0];
-
-        console.log("파일 타입"+imageData.type);
-        console.log(e);
         // 이미지파일인지 검사
-        // if(imageData.type.match("image.*")){
-        //     // 경고
-        //     alert("이미지 파일만 등록할 수 있습니다.");
-
-        //     // 이미지 input null 만들어야함.
-            
-        //     return;
-        // }
-
-        // 2MB이상 검사
-        if(imageData.size >= 2097152){
-            // 경고
-            alert("2MB 이상의 이미지는 등록할 수 없습니다.");
-            
-            // 이미지 input null 만들어야함.
-
+        if(!imageData.type.match("image.*")){
+            alert("이미지 파일만 등록할 수 있습니다.");
+            e.target.value = null;
             return;
         }
-
-        // 미리보기
+        if(imageData.size >= 2097152){
+            alert("2MB 이상의 이미지는 등록할 수 없습니다.");
+            return;
+        }
         let reader = new FileReader();
         reader.onload = (e) => {
             document.getElementById("imgPreview").src = e.target.result;
         }
         reader.readAsDataURL(imageData);
-
-        // state 저장
         setState({
             ...state,
             image: imageData
         })
     }
-    // 
+    const onSaveTag = (e) => {
+        if(e.key === 'Enter'){
+            const inputTag = e.target.value;
+            let dup = false;
+            // eslint-disable-next-line array-callback-return
+            tag.map((tag) => {
+                if(tag.tag === inputTag){
+                    dup = true;
+                }
+            })
+            if(!dup){
+                setTag([
+                    ...tag,
+                    {
+                        tag:inputTag
+                    }
+                ])
+    
+                e.target.value = null;
+            }
+        }
+    }
+    const onRemoveTag = (e) => {
+        setTag(
+            tag.filter(tag => tag.tag !== e.target.innerHTML)
+        )
+    }
+
     const createChallenge = async(e) => {
         e.preventDefault();
+
+        if(state.title === null || startDate === null || endDate === null || assignment === null) {
+            alert("필수 입력 정보가 누락되었습니다.");
+        }
+
         const form = new FormData();
         form.append("title", state.title);
         form.append("image", state.image);
         form.append("startDate", startDate);
         form.append("endDate", endDate);
         form.append("assignment", JSON.stringify(assignment));
+        form.append("tag",JSON.stringify(tag));
 
         // 타이틀, 이미지 유효성, null 체크 만들어야함.
+        
 
         const result = await challengeApi.create(form);
         console.log('챌린지 생성 결과',result);
@@ -262,30 +349,35 @@ const ChallengeCreate = (props) => {
         <Container>
             <CreateBox>
                 <LeftBox>
-                    <CreateTitle>New Challenge</CreateTitle>
                     <CreateForm>
                         <FormLabel>Challenge Title</FormLabel>
                         <FormInput onChange={onSaveTitle} type="text" name="title" />
-                        <FormLabel>Challenge Image</FormLabel>
-                        <FileLabel htmlFor="fileInput">챌린지의 대표 이미지 등록</FileLabel>
-                        <FormInput onChange={onSaveFile} type="file" name="image" id="fileInput" />
-                        <PreviewImg src="https://www.penworthy.com/Image/Getimage?id=C:\Repositories\Common\About%20Us\Slide1.jpg" id="imgPreview"></PreviewImg>
                         <FormLabel>Challenge Tag</FormLabel>
-
-                    </CreateForm>
-                </LeftBox>
-                <RightBox>
-                    <FormLabel>Challenge Date Range</FormLabel>
-                    <FormDateBox>
-                            <DatePicker 
+                        <TagInput onKeyPress={onSaveTag} type="text" name="tag" />
+                        <TagBox>
+                        {tag.length === 0
+                        ?
+                            <div>챌린지와 관련된 태그를 등록하세요.</div>
+                        :
+                            <TagItemBox>
+                                {tag.map((value, index) => 
+                                    <TagItem key={index} onClick={onRemoveTag}>
+                                        {value.tag}
+                                    </TagItem>
+                                )}
+                            </TagItemBox>
+                        }
+                        </TagBox>
+                        <FormLabel>Challenge Date Range</FormLabel>
+                        <FormDateBox>
+                            <DatePicker
                                 minDate={tMinDate}
                                 selected={startDate}
                                 onChange={onChange}
                                 startDate={startDate}
                                 endDate={endDate}
                                 selectsRange
-                                inline
-                            />
+                                inline />
                             <DateBox>
                             {dateRange.length === 0 
                             ?
@@ -321,7 +413,18 @@ const ChallengeCreate = (props) => {
                             }
                             </DateBox>
                         </FormDateBox>
-                    <CreateBtn onClick={createChallenge}>생성</CreateBtn>
+                    </CreateForm>
+                </LeftBox>
+                <RightBox>
+                    <CreateForm>
+                        <FormLabel>Challenge Image</FormLabel>
+                        <FileLabel htmlFor="fileInput">챌린지의 대표 이미지 등록</FileLabel>
+                        <FormInputHidden onChange={onSaveFile} type="file" name="image" id="fileInput" />
+                        <PreviewBox>
+                            <PreviewImg src="https://www.penworthy.com/Image/Getimage?id=C:\Repositories\Common\About%20Us\Slide1.jpg" id="imgPreview"></PreviewImg>
+                        </PreviewBox>
+                    </CreateForm>
+                    <CreateBtn onClick={createChallenge}>챌린지 생성하기</CreateBtn>
                 </RightBox>
             </CreateBox>
         </Container>

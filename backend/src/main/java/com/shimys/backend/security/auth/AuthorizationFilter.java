@@ -1,5 +1,6 @@
 package com.shimys.backend.security.auth;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.shimys.backend.domain.User;
 import com.shimys.backend.repository.UserRepository;
 import com.shimys.backend.security.jwt.JwtTokenUtil;
@@ -55,6 +56,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 chain.doFilter(request,response);
             }
         } catch (SignatureVerificationException e) {
+
             e.printStackTrace();
         }
     }
