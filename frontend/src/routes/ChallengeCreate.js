@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import { useHistory } from 'react-router';
 import styled from "styled-components";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -176,6 +177,7 @@ const CreateBtn = styled.div`
 
 
 const ChallengeCreate = (props) => {
+    const history = useHistory();
     // challenge
     const [state, setState] = useState({
         title:null,
@@ -191,6 +193,22 @@ const ChallengeCreate = (props) => {
     // 당일 날짜까지 비활성화 하기 위함
     let tMinDate = new Date();
     tMinDate.setDate(tMinDate.getDate()+1);
+
+    // 날짜 format 변경 함수
+    const formatDate = (current_datetime)=>{
+        let formatted_date = current_datetime.getFullYear() + 
+                            "-" + 
+                            ((current_datetime.getMonth() + 1) > 9 ? (current_datetime.getMonth() + 1) : '0'+(current_datetime.getMonth() + 1)) + 
+                            "-" + 
+                            (current_datetime.getDate() > 9 ? current_datetime.getDate() : '0'+current_datetime.getDate()) + 
+                            " " + 
+                            (current_datetime.getHours() > 9 ? current_datetime.getHours() : '0'+current_datetime.getHours()) + 
+                            ":" + 
+                            (current_datetime.getMinutes() > 9 ? current_datetime.getMinutes() : '0'+current_datetime.getMinutes()) + 
+                            ":" + 
+                            (current_datetime.getSeconds() > 9 ? current_datetime.getSeconds() : '0'+current_datetime.getSeconds());
+        return formatted_date;
+    }
 
     let subjectList = [];
     const subjectHandler = (start, end) => {
@@ -253,7 +271,7 @@ const ChallengeCreate = (props) => {
                 ...assignment,
                 {
                     id:id,
-                    day:day,
+                    day:formatDate(new Date(day)),
                     option:option
                 }
             ])
@@ -267,7 +285,6 @@ const ChallengeCreate = (props) => {
         }
     }
     const onSaveTitle = (e) => {
-        console.log(e.target.value);
         setState({
             ...state,
             title: e.target.value
@@ -323,6 +340,8 @@ const ChallengeCreate = (props) => {
         )
     }
 
+    
+
     const createChallenge = async(e) => {
         e.preventDefault();
 
@@ -333,16 +352,33 @@ const ChallengeCreate = (props) => {
         const form = new FormData();
         form.append("title", state.title);
         form.append("image", state.image);
-        form.append("startDate", startDate);
-        form.append("endDate", endDate);
+        form.append("startDate", formatDate(startDate));
+        form.append("endDate", formatDate(endDate));
         form.append("assignment", JSON.stringify(assignment));
         form.append("tag",JSON.stringify(tag));
 
         // 타이틀, 이미지 유효성, null 체크 만들어야함.
-        
+        const fileConfig = {
+            headers: {
+                'Content-Type': 'Multipart/form-data',
+                'Authorization': localStorage.getItem('AccessToken')
+            }
+        }
 
-        const result = await challengeApi.create(form);
+        const result = await challengeApi.create(form, fileConfig);
         console.log('챌린지 생성 결과',result);
+
+        if(result.data.code === 1){
+            history.push({
+                pathname: "/dashboard",
+                state: {
+                    status: 'setChallenge',
+                    data: result.data
+                }
+            })
+        } else {
+            alert('챌린지 생성 실패');
+        }
     }
 
     return (

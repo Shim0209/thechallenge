@@ -3,14 +3,6 @@ import axios from "axios";
 const api = axios.create({
     baseURL: 'http://localhost:8080/'
 })
-
-// 파일 전송시 사용
-const fileConfig = {
-    headers: {
-        'Content-Type': 'Multipart/form-data',
-        'Authorization': localStorage.getItem('AccessToken')
-    }
-}
 // // 인증이 필요한 요청에 사용
 // const authConfig = {
 //     headers: {
@@ -41,8 +33,8 @@ export const authApi = {
 }
 export const utilApi = {
     // 이미지 업로드
-    imageUpload:(form) => api.post("image", form, fileConfig),
+    imageUpload:(form, config) => api.post("image", form,config),
 }
 export const challengeApi = {
-    create:(form) => api.post("challenge/create",form,fileConfig),
+    create:(form, config) => api.post("challenge/create",form, config),
 }
