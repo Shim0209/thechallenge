@@ -44,7 +44,7 @@ public class AuthController {
         Integer code = authService.이메일인증(email);
 
         if(code == -1){
-            new ResponseEntity<>(new CommonResponseDto<>(-1, "이미 사용중인 Email 입니다.",null), HttpStatus.OK);
+            return new ResponseEntity<>(new CommonResponseDto<>(-1, "이미 사용중인 Email 입니다.",null), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(new CommonResponseDto<>(1, "이메일 인증번호 전송 성공",code), HttpStatus.OK);

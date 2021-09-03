@@ -9,15 +9,12 @@ import verifJwt from 'components/auth/verifJwt';
  * restriced가 true이면 verifJwt의 결과가 true시 유저화면 이동 
  *      => 로그인한 유저가 접근할 필요가 없는 페이지 login, signup 등
  */
-const PublicRoute = ({component: Component, restricted, ...rest}) => {
-    console.log('public');
-    return (
+const PublicRoute = ({component: Component, restricted, ...rest}) => (
     <Route {...rest} render={props => (
         verifJwt() && restricted ?
         <Redirect to="/" /> :
         <Component {...props} />
     )} />
-    )
-};
+);
 
 export default PublicRoute;

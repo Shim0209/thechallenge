@@ -136,7 +136,6 @@ const Signup = (props) => {
         name:null,
         email:null
     });
-    /* 중복검사, confirm 통과시 true */
     const [check, setCheck] = useState({
         username: false,
         password: false,
@@ -145,7 +144,6 @@ const Signup = (props) => {
         emailbtn: false,
         code: null
     });
-
     const onChange = (e) => {
         const { title, value } = e.target;
         setState({
@@ -153,7 +151,6 @@ const Signup = (props) => {
             [title]: value  
         })
     }
-
     const checkDupl = async(e) => {
         e.preventDefault();
 
@@ -192,7 +189,6 @@ const Signup = (props) => {
             }
         }
     }
-
     const checkEmail = async(e) => {
         e.preventDefault();
         if(check.emailbtn === true){
@@ -202,29 +198,38 @@ const Signup = (props) => {
             const result = await authApi.emailcheck(rawEmail);
 
             if(result.data.code === 1){
-                console.log('성공', result.data);
-                
                 document.getElementsByClassName('codebox')[0].style.display = 'block';
+                emailInput.style.color = 'black';
+                emailInput.style.border = '2px solid gray';
+                setError({
+                    ...error,
+                    email: null
+                })
                 setCheck({
                     ...check,
                     code:result.data.data
                 })
             } else {
-                console.log('실패', result);
-                alert('중복된 이메일은 사용할 수 없습니다.');
+                setMessage('dupemail', false);
+                emailInput.style.border = '2px solid #ED2003';
+                document.getElementsByClassName('email')[0].style.color = '#EE2003';
+                setValid({
+                    ...valid,
+                    email: false
+                })
+                setCheck({
+                    ...check,
+                    email: false
+                })
             }
 
             // 인증코드와 입렵한 인증번호 비교해서 같으면 valid true 처리 / 틀리면 경고            
         }
     }
-
     const checkCode = (e) => {
         const codeValue = document.getElementsByClassName('codeValue')[0];
         const emailInput = document.getElementsByClassName('emailInput')[0];
-        console.log(codeValue.value);
-        console.log(check.code);
         if(parseInt(codeValue.value) === check.code){
-            console.log('??');
             document.getElementsByClassName('codebox')[0].style.display = 'none';
             setMessage('code', true);
             emailInput.style.color = '#00D904';
@@ -253,7 +258,6 @@ const Signup = (props) => {
             })
         }
     }
-
     const checkPassword = (e) => {
         const {title, value} = e.target;
         if(state.password === value){
@@ -274,7 +278,6 @@ const Signup = (props) => {
             })
         }
     }
-
     const checkValid = async (e) => {
         const { title, value } = e.target;
         var regExp;
@@ -348,7 +351,6 @@ const Signup = (props) => {
         }
 
     }
-
     const setMessage = (title, result) => {
         let msg = null;
         // 성공 메세지
@@ -397,6 +399,10 @@ const Signup = (props) => {
                     msg = '인증코드가 틀렸습니다.';
                     title = 'email';
                     break;
+                case 'dupemail':
+                    msg = '중복된 이메일 입니다.';
+                    title = 'email';
+                    break;
             }
         }
 
@@ -405,7 +411,6 @@ const Signup = (props) => {
             [title]: msg
         })
     }
-
     const handleSubmit = async(e) => {
         e.preventDefault();
 
