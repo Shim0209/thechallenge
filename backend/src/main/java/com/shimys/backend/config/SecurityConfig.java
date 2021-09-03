@@ -4,6 +4,7 @@ import com.shimys.backend.repository.UserRepository;
 import com.shimys.backend.security.auth.AuthenticationFilter;
 import com.shimys.backend.security.auth.AuthorizationFilter;
 import com.shimys.backend.security.oauth.Oauth2DetailsService;
+import com.shimys.backend.security.oauth.Oauth2FailureHandler;
 import com.shimys.backend.security.oauth.Oauth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final Oauth2DetailsService oauth2DetailsService;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
+    private final Oauth2FailureHandler oauth2FailureHandler;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -67,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint() // oauth2 로그인시 최응응답으로 회원정보를 바로 받도록 설정. -> oauth2 인증과정 중 code 받기, access토큰 받기를 스프링에게 위임
                     .userService(oauth2DetailsService)
                     .and()
-                .successHandler(oauth2SuccessHandler); // oauth2 로그인에 성공하면 동작할 핸들러 등록
+                .successHandler(oauth2SuccessHandler) // oauth2 로그인에 성공하면 동작할 핸들러 등록
+                .failureHandler(oauth2FailureHandler);
     }
 }

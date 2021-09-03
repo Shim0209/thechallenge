@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation } from 'react-router';
 import styled from "styled-components";
 import Nav from 'components/Nav';
 
@@ -19,22 +18,17 @@ const RightBox = styled.div`
     width: 85%;
 `;
 
-
-const Dashboard = (props) => {
-    const location = useLocation();
-
-    console.log('전달받은 데이터',location);
-
+const Profile = (props) => {
     return (
         <Container>
             <LeftBox>
                 <Nav />
             </LeftBox>
             <RightBox>
-                대쉬보드 메인 페이지
+                프로필 페이지
             </RightBox>
         </Container>
     )
-};
+}
 
-export default Dashboard;
+export default Profile;

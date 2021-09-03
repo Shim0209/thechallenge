@@ -21,7 +21,6 @@ const verifJwt = (props) => {
     const jwtToken = accessToken.replace('Bearer','');
     // - jwt 디코드
     const decoded = jwt_decode(jwtToken); 
-    console.log('디코딩된 jwt',decoded);
     // - jwt 만료 예정시간  
     const expiredTime = decoded.exp+'000';
     // - 비교를 위한 현재 시간 가져오기

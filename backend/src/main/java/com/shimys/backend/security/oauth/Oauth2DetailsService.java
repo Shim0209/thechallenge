@@ -4,6 +4,7 @@ import com.shimys.backend.domain.User;
 import com.shimys.backend.repository.UserRepository;
 import com.shimys.backend.security.auth.PrincipalDetails;
 import com.shimys.backend.security.oauth.provider.*;
+import com.shimys.backend.util.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -37,6 +38,7 @@ public class Oauth2DetailsService extends DefaultOAuth2UserService {
             //throw CustomException("지원하지 않는 로그인 방식입니다.");
         }
 
+
         User userEntity = userRepository.findByUsername(oAuth2UserInfo.getUsername());
 
         if(userEntity == null){
@@ -48,6 +50,10 @@ public class Oauth2DetailsService extends DefaultOAuth2UserService {
                     .isAvailable(true)
                     .role("ROLE_USER")
                     .build();
+
+            if(userRepository.findByEmail(oAuth2UserInfo.getEmail()) != null){
+                throw new OAuth2AuthenticationException("이메일 중복");
+            }
 
             System.out.println(user.toString());
             return new PrincipalDetails(userRepository.save(user), oAuth2User.getAttributes());

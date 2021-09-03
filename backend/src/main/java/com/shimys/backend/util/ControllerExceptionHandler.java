@@ -5,6 +5,7 @@ import com.shimys.backend.util.exception.CustomException;
 import com.shimys.backend.util.exception.CustomValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,4 +23,5 @@ public class ControllerExceptionHandler {
     public ResponseEntity<?> customValidationException(CustomValidationException e){
         return new ResponseEntity<>(new CommonResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
+
 }

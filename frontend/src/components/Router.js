@@ -9,11 +9,13 @@ import Login from "routes/Login";
 import Logout from "routes/Logout";
 import Signup from "routes/Signup";
 import Dashboard from "routes/Dashboard";
+import Profile from "routes/Profile";
 import Mandalart from "routes/Mandalart";
 import ChallengeList from "routes/ChallengeList";
 import ChallengeCreate from "routes/ChallengeCreate";
 import Home from "routes/Home";
 import Oauth2Redirect from 'components/auth/Oauth2Redirect';
+import Oauth2Fail from "components/auth/Oauth2Fail";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => (
@@ -26,11 +28,13 @@ export default () => (
             <PublicRoute path="/signup" exact restricted={true} component={Signup} />
             <PrivateRoute path="/logout" exact component={Logout} />
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
+            <PrivateRoute path="/profile" exact component={Profile} />
             <PrivateRoute path="/mandalart" exact component={Mandalart} />
             <PublicRoute path="/challengeList" exact restricted={false} component={ChallengeList} />
             <PrivateRoute path="/challengeCreate" exact component={ChallengeCreate} />
             <PublicRoute path="/oauth2/redirect" exact restricted={true} component={Oauth2Redirect} />
-            <Redirect from="*" to="/" />
+            <PublicRoute path="/oauth2/fail" exact restricted={true} component={Oauth2Fail} />
+            <Redirect from="*" to="/Login" />
         </>
     </Router>
 )
