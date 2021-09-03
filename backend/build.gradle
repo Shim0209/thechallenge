@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.auth0:java-jwt:3.18.1'
 	implementation 'com.google.code.gson:gson:2.8.7'
+	implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

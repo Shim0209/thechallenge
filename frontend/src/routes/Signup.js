@@ -90,6 +90,32 @@ const DupCheckBtn = styled.a`
         box-shadow: 0px 0px 1px 1px #0095f6;
     }
 `;
+const CodeBox = styled.div`
+    margin-top: 5px;
+    width: 100%;
+    display: flex;
+    display: none;
+    justify-content: space-around;
+`;
+const CodeTitle = styled.span`
+    align-self: center;
+    font-size: 13px;
+`;
+const CodeIput = styled.input`
+    border: none;
+    border-bottom:1px solid gray;
+`;
+const CodeBtn = styled.a`
+    align-self: center;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #0095f6;
+    &:hover {
+        color: white;
+        background-color: #0095f6;
+    }
+`;
 
 const Signup = (props) => {
     const [state, setState] = useState({
@@ -114,8 +140,11 @@ const Signup = (props) => {
     const [check, setCheck] = useState({
         username: false,
         password: false,
-        dupbtn: false // username 조건이 만족할 경우 true -> 중복체크 할 수 있음
-    })
+        email: false,
+        dupbtn: false, // username 조건이 만족할 경우 true -> 중복체크 할 수 있음
+        emailbtn: false,
+        code: null
+    });
 
     const onChange = (e) => {
         const { title, value } = e.target;
@@ -164,6 +193,67 @@ const Signup = (props) => {
         }
     }
 
+    const checkEmail = async(e) => {
+        e.preventDefault();
+        if(check.emailbtn === true){
+            const emailInput = document.getElementsByClassName('emailInput')[0];
+            const rawEmail = emailInput.value;
+            
+            const result = await authApi.emailcheck(rawEmail);
+
+            if(result.data.code === 1){
+                console.log('성공', result.data);
+                
+                document.getElementsByClassName('codebox')[0].style.display = 'block';
+                setCheck({
+                    ...check,
+                    code:result.data.data
+                })
+            } else {
+                console.log('실패', result);
+                alert('중복된 이메일은 사용할 수 없습니다.');
+            }
+
+            // 인증코드와 입렵한 인증번호 비교해서 같으면 valid true 처리 / 틀리면 경고            
+        }
+    }
+
+    const checkCode = (e) => {
+        const codeValue = document.getElementsByClassName('codeValue')[0];
+        const emailInput = document.getElementsByClassName('emailInput')[0];
+        console.log(codeValue.value);
+        console.log(check.code);
+        if(parseInt(codeValue.value) === check.code){
+            console.log('??');
+            document.getElementsByClassName('codebox')[0].style.display = 'none';
+            setMessage('code', true);
+            emailInput.style.color = '#00D904';
+            emailInput.style.border = '2px solid #00D904';
+            document.getElementsByClassName('email')[0].style.color = '#00D904';
+            setValid({
+                ...valid,
+                email: true
+            })
+            setCheck({
+                ...check,
+                email: true
+            })
+        } else {
+            setMessage('code', false);
+            emailInput.style.color = '#EE2003';
+            emailInput.style.border = '2px solid #ED2003';
+            document.getElementsByClassName('email')[0].style.color = '#EE2003';
+            setValid({
+                ...valid,
+                email: false
+            })
+            setCheck({
+                ...check,
+                email: false
+            })
+        }
+    }
+
     const checkPassword = (e) => {
         const {title, value} = e.target;
         if(state.password === value){
@@ -205,16 +295,7 @@ const Signup = (props) => {
         }
 
         if(regExp.test(value)){
-            
-            if(title !== 'username'){
-                setValid({
-                    ...valid,
-                    [title]: true
-                })
-                setMessage(title, true);
-                e.target.style.border = '2px solid #00D904';
-                document.getElementsByClassName(title)[0].style.color = '#00D904';
-            } else {
+            if(title === 'username'){
                 // username
                 e.target.style.border = '2px solid gray';
                 setError({
@@ -225,6 +306,24 @@ const Signup = (props) => {
                     ...check,
                     dupbtn: true
                 })
+            } else if (title === 'email'){
+                e.target.style.border = '2px solid gray';
+                setError({
+                    ...error,
+                    [title]: null
+                })
+                setCheck({
+                    ...check,
+                    emailbtn: true
+                })
+            } else {
+                setValid({
+                    ...valid,
+                    [title]: true
+                })
+                setMessage(title, true);
+                e.target.style.border = '2px solid #00D904';
+                document.getElementsByClassName(title)[0].style.color = '#00D904';
             }
             
         } else {
@@ -239,6 +338,11 @@ const Signup = (props) => {
                 setCheck({
                     ...check,
                     dupbtn: false
+                })
+            } else if(title === 'email'){
+                setCheck({
+                    ...check,
+                    emailbtn: false
                 })
             }
         }
@@ -263,6 +367,10 @@ const Signup = (props) => {
                 case 'email':
                     msg = '사용할 수 있는 Email 입니다.';
                     break;
+                case 'code':
+                    msg = '이메일 인증이 정상적으로 처리되었습니다.';
+                    title = 'email'
+                    break;
             }
             
         // 실패 메세지
@@ -284,6 +392,10 @@ const Signup = (props) => {
                 case 'duplication':
                     msg = '중복된 아이디 입니다.';
                     title = 'username';
+                    break;
+                case 'code':
+                    msg = '인증코드가 틀렸습니다.';
+                    title = 'email';
                     break;
             }
         }
@@ -324,7 +436,7 @@ const Signup = (props) => {
                     <label>Username</label>
                     <DupBox>
                         <FormInput className="usernameInput" type="text" onChange={onChange} onBlur={checkValid}  title="username" />
-                        <DupCheckBtn className="dupCheckBtn" onClick={checkDupl}>중복검사</DupCheckBtn>
+                        <DupCheckBtn className="dupCheckBtn" onClick={checkDupl}> 중복검사 </DupCheckBtn>
                     </DupBox>
                     <ErrorMessage className="username">{error.username}</ErrorMessage>
                     <label>Password</label>
@@ -337,7 +449,15 @@ const Signup = (props) => {
                     <FormInput type="text" onChange={onChange} onBlur={checkValid} title="name" />
                     <ErrorMessage className="name">{error.name}</ErrorMessage>
                     <label>Email</label>
-                    <FormInput type="email" onChange={onChange} onBlur={checkValid} title="email" />
+                    <DupBox>
+                        <FormInput className="emailInput" type="email" onChange={onChange} onBlur={checkValid} title="email" />
+                        <DupCheckBtn onClick={checkEmail}>메일인증</DupCheckBtn>
+                    </DupBox>
+                    <CodeBox className="codebox">
+                        <CodeTitle>인증번호</CodeTitle>
+                        <CodeIput className="codeValue" type="text" />
+                        <CodeBtn onClick={checkCode}>확인</CodeBtn>
+                    </CodeBox>
                     <ErrorMessage className="email">{error.email}</ErrorMessage>
                     <FormBtn>회원가입</FormBtn>
                 </SignupForm>

@@ -37,4 +37,16 @@ public class AuthController {
         }
         return new ResponseEntity<>(new CommonResponseDto<>(1,"사용할 수 있는 아이디 입니다.",username), HttpStatus.OK);
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<?> emailCheck(@RequestParam String email){
+        System.out.println("emailCheck 동작 : " + email);
+        Integer code = authService.이메일인증(email);
+
+        if(code == -1){
+            new ResponseEntity<>(new CommonResponseDto<>(-1, "이미 사용중인 Email 입니다.",null), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new CommonResponseDto<>(1, "이메일 인증번호 전송 성공",code), HttpStatus.OK);
+    }
 }

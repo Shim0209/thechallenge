@@ -21,6 +21,7 @@ const api = axios.create({
 export const authApi = {
     // 회원가입
     signup:(form) => api.post("auth/signup", form),
+    login:(data) => api.post("login", data),
 
     // 아이디(username) 중복체크
     duplication:(username) => api.get("auth/duplication", {
@@ -28,8 +29,12 @@ export const authApi = {
             username: username
         }
     }),
-
-    login:(data) => api.post("login", data),
+    // 이메일 인증
+    emailcheck:(email) => api.get("auth/email", {
+        params: {
+            email: email
+        }
+    }),
 }
 export const utilApi = {
     // 이미지 업로드
