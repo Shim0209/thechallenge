@@ -17,27 +17,30 @@ const Container = styled.div`
 const CreateBox = styled.div`
     background-color: #fafafa;
     box-shadow: 0px 0px 3px 1px gray;
-
-    width: 1000px;
+    width: 520px;
     height:600px;
-    border-radius:20px;
-    padding:50px 40px 10px 40px;
-    box-sizing: border-box;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    overflow: scroll;
+    padding: 0 50px;
+    border-radius:10px;
 `;
 const LeftBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 45%;
+    width: 100%;
     height: 500px;
+    margin-top: 450px;
+    margin-bottom: 40px;
 `;
 const RightBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 45%;
+    width: 100%;
     height: 500px;
 `;
 const CreateTitle = styled.div`
@@ -79,7 +82,7 @@ const PreviewBox = styled.div`
     border-left: 2px solid gray;
     border-right: 2px solid gray;
     width: inherit;
-    height: 400px;
+    height: inherit;
     overflow: scroll;
 `;
 const PreviewImg = styled.img`
@@ -109,6 +112,7 @@ const TagBox = styled.div`
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     overflow-y: scroll;
+    padding: 5px;
 `;
 const TagItemBox = styled.div`
     /* grid 방식 */
@@ -136,7 +140,7 @@ const FormDateBox = styled.div`
     display: flex;
     border: 2px solid gray;
     border-radius: 5px;
-    height: 269px;
+    height: inherit;
 `;
 const DateBox = styled.div`
     height: 265px;
@@ -385,6 +389,7 @@ const ChallengeCreate = (props) => {
         <Container>
             <CreateBox>
                 <LeftBox>
+                    <CreateTitle>Create Challenge</CreateTitle>
                     <CreateForm>
                         <FormLabel>Challenge Title</FormLabel>
                         <FormInput onChange={onSaveTitle} type="text" name="title" />

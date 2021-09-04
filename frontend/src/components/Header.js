@@ -44,7 +44,6 @@ const NavLi = styled.li`
 `;
 const SLink = styled(Link)`
     font-weight: 500;
-    
 `;
 const HeaderMenu = styled.div`
     padding-right: 20px;
