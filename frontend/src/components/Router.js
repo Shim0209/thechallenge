@@ -2,7 +2,6 @@ import React from "react";
 import {BrowserRouter as Router, Redirect} from "react-router-dom";
 
 import Header from "components/Header";
-import Footer from "components/Footer";
 import PrivateRoute from "components/auth/PrivateRoute";
 import PublicRoute from "components/auth/PublicRoute";
 import Login from "routes/Login";
@@ -12,6 +11,7 @@ import Dashboard from "routes/Dashboard";
 import Profile from "routes/Profile";
 import Mandalart from "routes/Mandalart";
 import Challenge from "routes/challenge/Challenge";
+import List from "routes/challenge/List";
 import Create from "routes/challenge/Create";
 import Manage from "routes/challenge/Manage";
 import MyChallenge from "routes/challenge/MyChallenge";
@@ -33,9 +33,10 @@ export default () => (
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
             <PrivateRoute path="/profile" exact component={Profile} />
             <PrivateRoute path="/mandalart" exact component={Mandalart} />
-            <PublicRoute path="/challenge" exact restricted={false} component={Challenge} />
+            <PublicRoute path="/challenge" exact restricted={false} component={List} />
             <PrivateRoute path="/challenge/create" exact component={Create} />
             <PrivateRoute path="/challenge/manage" exact component={Manage} />
+            <PrivateRoute path="/challenge/manage/:id" exact component={Challenge} />
             <PrivateRoute path="/challenge/mychallenge" exact component={MyChallenge} />
             <PrivateRoute path="/challenge/assignment" exact component={Assignment} />
             <PublicRoute path="/oauth2/redirect" exact restricted={true} component={Oauth2Redirect} />
