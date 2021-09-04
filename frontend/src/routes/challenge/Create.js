@@ -4,8 +4,24 @@ import styled from "styled-components";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { challengeApi } from 'api';
+import Nav from 'components/Nav';
 
 const Container = styled.div`
+    background-color: #fafafa;
+    width: 100%;
+    height: calc(100vh - 60px);
+    display: flex;
+`;
+const LeftBox = styled.div`
+    padding: 10px 5px 5px 5px;
+    width: 15%;
+    border-right: 1px solid gray;
+`;
+const RightBox = styled.div`
+    padding: 10px 5px 5px 5px;
+    width: 85%;
+`;
+const CContainer = styled.div`
     background-color: #fafafa;
     width: 100%;
     height: calc(100vh - 60px);
@@ -27,7 +43,7 @@ const CreateBox = styled.div`
     padding: 0 50px;
     border-radius:10px;
 `;
-const LeftBox = styled.div`
+const CLeftBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,7 +52,7 @@ const LeftBox = styled.div`
     margin-top: 450px;
     margin-bottom: 40px;
 `;
-const RightBox = styled.div`
+const CRightBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,8 +194,6 @@ const CreateBtn = styled.div`
         color: white;
     }
 `;
-
-
 const ChallengeCreate = (props) => {
     const history = useHistory();
     // challenge
@@ -193,11 +207,9 @@ const ChallengeCreate = (props) => {
     const [dateRange, setDateRange] = useState([]);
     const [assignment, setAssignment] = useState([]);
     const [tag, setTag] = useState([]);
-
     // 당일 날짜까지 비활성화 하기 위함
     let tMinDate = new Date();
     tMinDate.setDate(tMinDate.getDate()+1);
-
     // 날짜 format 변경 함수
     const formatDate = (current_datetime)=>{
         let formatted_date = current_datetime.getFullYear() + 
@@ -213,7 +225,6 @@ const ChallengeCreate = (props) => {
                             (current_datetime.getSeconds() > 9 ? current_datetime.getSeconds() : '0'+current_datetime.getSeconds());
         return formatted_date;
     }
-
     let subjectList = [];
     const subjectHandler = (start, end) => {
         const sDate = new Date(start);
@@ -343,9 +354,6 @@ const ChallengeCreate = (props) => {
             tag.filter(tag => tag.tag !== e.target.innerHTML)
         )
     }
-
-    
-
     const createChallenge = async(e) => {
         e.preventDefault();
 
@@ -374,7 +382,7 @@ const ChallengeCreate = (props) => {
 
         if(result.data.code === 1){
             history.push({
-                pathname: "/dashboard",
+                pathname: "/challenge/manage",
                 state: {
                     status: 'setChallenge',
                     data: result.data
@@ -387,89 +395,96 @@ const ChallengeCreate = (props) => {
 
     return (
         <Container>
-            <CreateBox>
-                <LeftBox>
-                    <CreateTitle>Create Challenge</CreateTitle>
-                    <CreateForm>
-                        <FormLabel>Challenge Title</FormLabel>
-                        <FormInput onChange={onSaveTitle} type="text" name="title" />
-                        <FormLabel>Challenge Tag</FormLabel>
-                        <TagInput onKeyPress={onSaveTag} type="text" name="tag" />
-                        <TagBox>
-                        {tag.length === 0
-                        ?
-                            <div>챌린지와 관련된 태그를 등록하세요.</div>
-                        :
-                            <TagItemBox>
-                                {tag.map((value, index) => 
-                                    <TagItem key={index} onClick={onRemoveTag}>
-                                        {value.tag}
-                                    </TagItem>
-                                )}
-                            </TagItemBox>
-                        }
-                        </TagBox>
-                        <FormLabel>Challenge Date Range</FormLabel>
-                        <FormDateBox>
-                            <DatePicker
-                                minDate={tMinDate}
-                                selected={startDate}
-                                onChange={onChange}
-                                startDate={startDate}
-                                endDate={endDate}
-                                selectsRange
-                                inline />
-                            <DateBox>
-                            {dateRange.length === 0 
-                            ?
-                                <div>날짜를 선택하세요</div> 
-                            : 
-                                <div>
-                                    {dateRange.map((day, index) =>
-                                        <DateItem key={index} >
-                                            <DateCheckbox type="checkbox" id={'c-'+index} onChange={selectHandler} />
-                                            <div id={'d-'+index}>
-                                            {
-                                                day.getMonth() > 9
-                                                ? day.getMonth()
-                                                : '0'+day.getMonth()
-                                            }월 
-                                            {
-                                                day.getDate() > 9 
-                                                ? day.getDate() 
-                                                : '0'+day.getDate()
-                                            }일
-                                            </div>
-                                            <DateSelect disabled id={'s-'+index} onChange={assignmentHandler}>
-                                                <option value={day} hidden id={'v-'+index}>제출방식</option>
-                                                <option value="file">File제출</option>
-                                                <option value="url">Url제출</option>
-                                                <option value="quiz">Quiz제출</option>
-                                                <option value="text">Text제출</option>
-                                            </DateSelect>
-                                        </DateItem>
-                                        )
+            <LeftBox>
+                <Nav />
+            </LeftBox>
+            <RightBox>
+            <CContainer>
+                    <CreateBox>
+                        <CLeftBox>
+                            <CreateTitle>Create Challenge</CreateTitle>
+                            <CreateForm>
+                                <FormLabel>Challenge Title</FormLabel>
+                                <FormInput onChange={onSaveTitle} type="text" name="title" />
+                                <FormLabel>Challenge Tag</FormLabel>
+                                <TagInput onKeyPress={onSaveTag} type="text" name="tag" />
+                                <TagBox>
+                                {tag.length === 0
+                                ?
+                                    <div>챌린지와 관련된 태그를 등록하세요.</div>
+                                :
+                                    <TagItemBox>
+                                        {tag.map((value, index) => 
+                                            <TagItem key={index} onClick={onRemoveTag}>
+                                                {value.tag}
+                                            </TagItem>
+                                        )}
+                                    </TagItemBox>
+                                }
+                                </TagBox>
+                                <FormLabel>Challenge Date Range</FormLabel>
+                                <FormDateBox>
+                                    <DatePicker
+                                        minDate={tMinDate}
+                                        selected={startDate}
+                                        onChange={onChange}
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        selectsRange
+                                        inline />
+                                    <DateBox>
+                                    {dateRange.length === 0 
+                                    ?
+                                        <div>날짜를 선택하세요</div> 
+                                    : 
+                                        <div>
+                                            {dateRange.map((day, index) =>
+                                                <DateItem key={index} >
+                                                    <DateCheckbox type="checkbox" id={'c-'+index} onChange={selectHandler} />
+                                                    <div id={'d-'+index}>
+                                                    {
+                                                        day.getMonth() > 9
+                                                        ? day.getMonth()
+                                                        : '0'+day.getMonth()
+                                                    }월 
+                                                    {
+                                                        day.getDate() > 9 
+                                                        ? day.getDate() 
+                                                        : '0'+day.getDate()
+                                                    }일
+                                                    </div>
+                                                    <DateSelect disabled id={'s-'+index} onChange={assignmentHandler}>
+                                                        <option value={day} hidden id={'v-'+index}>제출방식</option>
+                                                        <option value="file">File제출</option>
+                                                        <option value="url">Url제출</option>
+                                                        <option value="quiz">Quiz제출</option>
+                                                        <option value="text">Text제출</option>
+                                                    </DateSelect>
+                                                </DateItem>
+                                                )
+                                            }
+                                        </div>
                                     }
-                                </div>
-                            }
-                            </DateBox>
-                        </FormDateBox>
-                    </CreateForm>
-                </LeftBox>
-                <RightBox>
-                    <CreateForm>
-                        <FormLabel>Challenge Image</FormLabel>
-                        <FileLabel htmlFor="fileInput">챌린지의 대표 이미지 등록</FileLabel>
-                        <FormInputHidden onChange={onSaveFile} type="file" name="image" id="fileInput" />
-                        <PreviewBox>
-                            <PreviewImg src="https://www.penworthy.com/Image/Getimage?id=C:\Repositories\Common\About%20Us\Slide1.jpg" id="imgPreview"></PreviewImg>
-                        </PreviewBox>
-                    </CreateForm>
-                    <CreateBtn onClick={createChallenge}>챌린지 생성하기</CreateBtn>
-                </RightBox>
-            </CreateBox>
+                                    </DateBox>
+                                </FormDateBox>
+                            </CreateForm>
+                        </CLeftBox>
+                        <CRightBox>
+                            <CreateForm>
+                                <FormLabel>Challenge Image</FormLabel>
+                                <FileLabel htmlFor="fileInput">챌린지의 대표 이미지 등록</FileLabel>
+                                <FormInputHidden onChange={onSaveFile} type="file" name="image" id="fileInput" />
+                                <PreviewBox>
+                                    <PreviewImg src="https://www.penworthy.com/Image/Getimage?id=C:\Repositories\Common\About%20Us\Slide1.jpg" id="imgPreview"></PreviewImg>
+                                </PreviewBox>
+                            </CreateForm>
+                            <CreateBtn onClick={createChallenge}>챌린지 생성하기</CreateBtn>
+                        </CRightBox>
+                    </CreateBox>
+                </CContainer>
+            </RightBox>
         </Container>
     )
+    
 }
-
 export default ChallengeCreate;

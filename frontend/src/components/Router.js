@@ -11,8 +11,11 @@ import Signup from "routes/Signup";
 import Dashboard from "routes/Dashboard";
 import Profile from "routes/Profile";
 import Mandalart from "routes/Mandalart";
-import ChallengeList from "routes/ChallengeList";
-import ChallengeCreate from "routes/ChallengeCreate";
+import Challenge from "routes/challenge/Challenge";
+import Create from "routes/challenge/Create";
+import Manage from "routes/challenge/Manage";
+import MyChallenge from "routes/challenge/MyChallenge";
+import Assignment from "routes/challenge/Assignment";
 import Home from "routes/Home";
 import Oauth2Redirect from 'components/auth/Oauth2Redirect';
 import Oauth2Fail from "components/auth/Oauth2Fail";
@@ -30,8 +33,11 @@ export default () => (
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
             <PrivateRoute path="/profile" exact component={Profile} />
             <PrivateRoute path="/mandalart" exact component={Mandalart} />
-            <PublicRoute path="/challengeList" exact restricted={false} component={ChallengeList} />
-            <PrivateRoute path="/challengeCreate" exact component={ChallengeCreate} />
+            <PublicRoute path="/challenge" exact restricted={false} component={Challenge} />
+            <PrivateRoute path="/challenge/create" exact component={Create} />
+            <PrivateRoute path="/challenge/manage" exact component={Manage} />
+            <PrivateRoute path="/challenge/mychallenge" exact component={MyChallenge} />
+            <PrivateRoute path="/challenge/assignment" exact component={Assignment} />
             <PublicRoute path="/oauth2/redirect" exact restricted={true} component={Oauth2Redirect} />
             <PublicRoute path="/oauth2/fail" exact restricted={true} component={Oauth2Fail} />
             <Redirect from="*" to="/Login" />

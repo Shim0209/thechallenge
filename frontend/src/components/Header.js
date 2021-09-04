@@ -143,11 +143,11 @@ export default withRouter(({ location: {pathname}}) => (
                     <NavLi current={pathname === "/"}>
                         <SLink to="/">Home</SLink>
                     </NavLi>
-                    <NavLi current={pathname === "/challengeList"}>
-                        <SLink to="/challengeList">Challenge</SLink>
+                    <NavLi current={pathname === "/challenge"}>
+                        <SLink to="/challenge">Challenge</SLink>
                     </NavLi>
-                    <NavLi current={pathname === "/challengeCreate"}>
-                        <SLink to="/challengeCreate">Create</SLink>
+                    <NavLi current={pathname === "/dashboard"}>
+                        <SLink to="/dashboard">Dashboard</SLink>
                     </NavLi>
                 </NavUl>
             </HeaderNav>
@@ -162,7 +162,7 @@ export default withRouter(({ location: {pathname}}) => (
                 <HeaderTitle>Shim</HeaderTitle>
                 <HeaderEmail>sim@gamil.com</HeaderEmail>
                 <HeaderProfile>
-                    <SLink to="/dashboard">Dashboard</SLink>
+                    <SLink to="/profile">Profile</SLink>
                 </HeaderProfile>
             </MenuHeader>
             <MenuHorizon></MenuHorizon>

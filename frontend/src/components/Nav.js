@@ -28,12 +28,12 @@ const NavListItem = styled.li`
 const NavStatus = styled.div``;
 const NavAlert = styled.div`
     text-align: center;
-    &:hover {
-        border: 1px solid white;
-    }
 `;
 const SLink = styled(Link)`
     font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 `;
 
 export default withRouter(({ location: {pathname}}) => (
@@ -50,20 +50,27 @@ export default withRouter(({ location: {pathname}}) => (
             <NavTitle>챌린지</NavTitle>
             <NavList>
                 <NavListItem>
-                    <NavStatus>대기</NavStatus>
-                    <NavAlert>2</NavAlert>
+                    <SLink to="/challenge/create">
+                        <NavStatus>빠른시작</NavStatus>
+                    </SLink>
                 </NavListItem>
-                <NavListItem>
-                    <NavStatus>진행</NavStatus>
-                    <NavAlert>1</NavAlert>
+                <NavListItem current={pathname === "/challenge/mychallenge"}>
+                    <SLink to="/challenge/mychallenge">
+                        <NavStatus>참여</NavStatus>
+                        <NavAlert>2</NavAlert>
+                    </SLink>
                 </NavListItem>
-                <NavListItem>
-                    <NavStatus>과제</NavStatus>
-                    <NavAlert>5</NavAlert>
+                <NavListItem current={pathname === "/challenge/assignment"}>
+                    <SLink to="/challenge/assignment">
+                        <NavStatus>과제</NavStatus>
+                        <NavAlert>5</NavAlert>
+                    </SLink>
                 </NavListItem>
-                <NavListItem>
-                    <NavStatus>운영</NavStatus>
-                    <NavAlert>1</NavAlert>
+                <NavListItem current={pathname === "/challenge/manage"}>
+                    <SLink to="/challenge/manage">
+                        <NavStatus >운영</NavStatus>
+                        <NavAlert>1</NavAlert>
+                    </SLink>
                 </NavListItem>
             </NavList>
         </NavItem>
