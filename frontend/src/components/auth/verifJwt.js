@@ -27,6 +27,7 @@ const verifJwt = (props) => {
     const currentTime = new Date().getTime();
     // - 만료시간 비교
     if(expiredTime <= currentTime) {
+        localStorage.clear();
         return false;
     }
 

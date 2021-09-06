@@ -1,5 +1,6 @@
 package com.shimys.backend.util;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.shimys.backend.util.dto.CommonResponseDto;
 import com.shimys.backend.util.exception.CustomException;
 import com.shimys.backend.util.exception.CustomValidationException;
@@ -23,5 +24,4 @@ public class ControllerExceptionHandler {
     public ResponseEntity<?> customValidationException(CustomValidationException e){
         return new ResponseEntity<>(new CommonResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
-
 }

@@ -2,6 +2,7 @@ package com.shimys.backend.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -55,7 +56,7 @@ public class JwtTokenUtil {
      * @param request
      * @return
      */
-    public static String getUsernameByToken(HttpServletRequest request) {
+    public static String getUsernameByToken(HttpServletRequest request){
         String result = "";
         try {
             // 1. 요청헤더에서 토큰 추출

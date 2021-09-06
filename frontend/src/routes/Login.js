@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { authApi } from 'api';
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -184,12 +184,6 @@ const Login = (props) => {
                 message: '아이디 또는 비밀번호가 잘못되었습니다.'
             })
         }
-    }
-
-    const location = useLocation();
-    if(location.state !== null){
-        console.log('',location);
-        //alert(location.state);
     }
 
     return (

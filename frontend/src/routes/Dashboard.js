@@ -23,8 +23,6 @@ const RightBox = styled.div`
 const Dashboard = (props) => {
     const location = useLocation();
 
-    console.log('전달받은 데이터',location);
-
     return (
         <Container>
             <LeftBox>

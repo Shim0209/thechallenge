@@ -1,13 +1,15 @@
 package com.shimys.backend.security.auth;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.shimys.backend.domain.User;
 import com.shimys.backend.repository.UserRepository;
 import com.shimys.backend.security.jwt.JwtTokenUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 
@@ -58,6 +60,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         } catch (SignatureVerificationException e) {
 
             e.printStackTrace();
+        } catch (TokenExpiredException e) {
+            throw new TokenExpiredException("JWT 토큰 만료");
         }
     }
 }

@@ -25,6 +25,10 @@ const RightBox = styled.div`
 const FormBox = styled.div``;
 const ShowBox = styled.div``;
 
+const Image = styled.img`
+    width: 500px;
+`;
+
 const ChallengeManage = (props) => {
     const [state, setState] = useState({
         challenge: null,
@@ -47,6 +51,7 @@ const ChallengeManage = (props) => {
         let result = null;
         try {
             result = await challengeApi.challenge(id);
+            console.log('결과 원본',result);
             setState({
                 ...state,
                 loading:false,
@@ -77,6 +82,7 @@ const ChallengeManage = (props) => {
 
 
     console.log('데이터',state);
+    console.log('이미지?',state.challenge);
 
     return (
         <>
@@ -88,14 +94,28 @@ const ChallengeManage = (props) => {
                     <Nav />
                 </LeftBox>
                 <RightBox>
-                    {
-                        state.loading 
-                        ? <Loader />
-                        : <>
-                            하이룽
-                        </>
-                    }
+                {
+                    state.loading 
+                    ? <Loader />
+                    : 
+                    <>
+                        <Image src={`data:image/jpeg;base64,${state.challenge[1]}`} />
+                        {/* <div>{state.challenge.title}</div>
 
+                        <div>{state.challenge.status}</div>
+                        <p>
+                            <Image src={`http://localhost:8080/images/${state.challenge.mainImageUrl}`} />
+                        </p>
+                        <div>{state.challenge.startDate}</div>
+                        <div>{state.challenge.endDate}</div>
+                        {state.challenge.assignments.map(assign => {
+                            <div>{assign.type}</div>
+                        })}
+                        {state.challenge.tags.map(tag => {
+                            <div>{tag.tag}</div>
+                        })} */}
+                    </>
+                }
                 </RightBox>
             </Container>
         </>

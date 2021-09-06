@@ -13,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/challenge")
@@ -28,8 +33,13 @@ public class ChallengeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> challenge(@PathVariable Long id){
+    public ResponseEntity<?> challenge(@PathVariable Long id) throws IOException {
         Challenge challengeEntity = challengeService.챌린지찾기(id);
-        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", challengeEntity), HttpStatus.CREATED);
+        InputStream in = getClass().getResourceAsStream("/static/images/"+challengeEntity.getMainImageUrl());
+        List result = new ArrayList();
+        result.add(challengeEntity);
+        result.add(in.readAllBytes());
+
+        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", result), HttpStatus.CREATED);
     }
 }

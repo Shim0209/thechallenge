@@ -217,8 +217,8 @@ const Manage = (props) => {
                             </Tr>
                             <Tr>
                                 <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        1
+                                    <SLink to={`/challenge/manage/${13}`}>
+                                        13
                                     </SLink>
                                 </Td>
                                 <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
