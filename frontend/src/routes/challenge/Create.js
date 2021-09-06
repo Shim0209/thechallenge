@@ -379,10 +379,11 @@ const ChallengeCreate = (props) => {
 
         const result = await challengeApi.create(form, fileConfig);
         console.log('챌린지 생성 결과',result);
-
+        
+        // !! /challenge/manage/{id} 수정필요 + 해당 페이지 만들어야함
         if(result.data.code === 1){
             history.push({
-                pathname: "/challenge/manage",
+                pathname: `/challenge/manage/${result.data.data.id}`,
                 state: {
                     status: 'setChallenge',
                     data: result.data

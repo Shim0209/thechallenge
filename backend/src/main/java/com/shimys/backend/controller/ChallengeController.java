@@ -23,7 +23,13 @@ public class ChallengeController {
     @PostMapping("/create")
     public ResponseEntity<?> create(ChallengeCreateDto challengeCreateDto, @AuthenticationPrincipal PrincipalDetails principalDetails){
         Challenge challengeEntity = challengeService.챌린지생성(challengeCreateDto, principalDetails);
-
+        // 챌린지 생성후 /challenge/manage/{생성한 챌린지 id} 페이지로 이동.
         return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 생성 성공", challengeEntity), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> challenge(@PathVariable Long id){
+        Challenge challengeEntity = challengeService.챌린지찾기(id);
+        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", challengeEntity), HttpStatus.CREATED);
     }
 }

@@ -22,12 +22,26 @@ const Challenge = (props) => {
     return (
         <Container>
             <LeftBox>
-                <Nav />
+                챌린지 이미지
+                
+                챌린지 정보
+                챌린지 일정표
+                챌린지 과제 진행표
+                챌린지 참가자
+                챌린지 안내사항
+
+                으로 갈수있는 네비게이션 만들기
+                여기서 클릭하면 RightBox에서 정보 출력
+                컴포넌트로 만들기
             </LeftBox>
             <RightBox>
-                
-                해당 챌린지 관리 운영 종합 페이지
-
+                참여자들이 챌린지 들어와서 보는 실제 페이지
+                챌린지 정보
+                참여자 정보
+                과제 정보
+                일정 정보
+                안내문
+                등등 
             </RightBox>
         </Container>
     )

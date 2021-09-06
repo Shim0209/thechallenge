@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +39,12 @@ public class Oauth2DetailsService extends DefaultOAuth2UserService {
             //throw CustomException("지원하지 않는 로그인 방식입니다.");
         }
 
-
         User userEntity = userRepository.findByUsername(oAuth2UserInfo.getUsername());
-
         if(userEntity == null){
+            if(userRepository.findByEmail(oAuth2UserInfo.getEmail()) != null){
+                throw new OAuth2AuthenticationException(new OAuth2Error("-1"), "이메일 중복");
+            }
+
             User user = User.builder()
                     .username(oAuth2UserInfo.getUsername())
                     .password(oAuth2UserInfo.getPassword())
@@ -50,10 +53,6 @@ public class Oauth2DetailsService extends DefaultOAuth2UserService {
                     .isAvailable(true)
                     .role("ROLE_USER")
                     .build();
-
-            if(userRepository.findByEmail(oAuth2UserInfo.getEmail()) != null){
-                throw new OAuth2AuthenticationException("이메일 중복");
-            }
 
             System.out.println(user.toString());
             return new PrincipalDetails(userRepository.save(user), oAuth2User.getAttributes());

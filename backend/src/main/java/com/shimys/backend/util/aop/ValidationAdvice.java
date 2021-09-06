@@ -15,6 +15,13 @@ import java.util.Map;
 @Aspect
 public class ValidationAdvice {
 
+    /**
+     * 유효성 검사 AOP
+     * BindingResult 매개변수를 가지고 있는 컨트롤러 중 에러코드가 있는 경우를 찾고 에러를 반환한다.
+     * @param proceedingJoinPoint
+     * @return
+     * @throws Throwable
+     */
     @Around("execution(* com.shimys.backend.controller.*Controller.*(..))")
     public Object advice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();

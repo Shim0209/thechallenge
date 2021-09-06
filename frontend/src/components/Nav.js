@@ -51,12 +51,12 @@ export default withRouter(({ location: {pathname}}) => (
             <NavList>
                 <NavListItem>
                     <SLink to="/challenge/create">
-                        <NavStatus>빠른시작</NavStatus>
+                        <NavStatus>생성하기</NavStatus>
                     </SLink>
                 </NavListItem>
                 <NavListItem current={pathname === "/challenge/mychallenge"}>
                     <SLink to="/challenge/mychallenge">
-                        <NavStatus>참여</NavStatus>
+                        <NavStatus>참여중</NavStatus>
                         <NavAlert>2</NavAlert>
                     </SLink>
                 </NavListItem>
@@ -68,7 +68,7 @@ export default withRouter(({ location: {pathname}}) => (
                 </NavListItem>
                 <NavListItem current={pathname === "/challenge/manage"}>
                     <SLink to="/challenge/manage">
-                        <NavStatus >운영</NavStatus>
+                        <NavStatus>운영중</NavStatus>
                         <NavAlert>1</NavAlert>
                     </SLink>
                 </NavListItem>
@@ -84,6 +84,9 @@ export default withRouter(({ location: {pathname}}) => (
         <NavItem>
             <NavTitle>만다아트</NavTitle>
             <NavList>
+                <NavListItem current={pathname === "/mandalart"}>
+                    <NavStatus>전체보기</NavStatus>
+                </NavListItem>
                 <NavListItem>
                     <NavStatus>2021 목표</NavStatus>
                 </NavListItem>

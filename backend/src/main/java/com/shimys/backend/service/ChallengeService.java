@@ -36,6 +36,13 @@ public class ChallengeService {
     private final ChallengeAssignmentRepository challengeAssignmentRepository;
     private final ChallengeTagRepository challengeTagRepository;
 
+    /**
+     * 챌랜지 생성, 챌랜지 과제 생성, 챌린지 태그 생성
+     *
+     * @param challengeCreateDto 챌랜지 생성에 필요한 정보
+     * @param principalDetails 유저정보(host)
+     * @return 생성한 챌린지 정보
+     */
     @Transactional
     public Challenge 챌린지생성(ChallengeCreateDto challengeCreateDto, PrincipalDetails principalDetails){
         Gson gson = new Gson();
@@ -93,4 +100,8 @@ public class ChallengeService {
         return challengeEntity;
     }
 
+    @Transactional
+    public Challenge 챌린지찾기(Long challengeId){
+        return challengeRepository.getById(challengeId);
+    }
 }

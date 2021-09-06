@@ -16,8 +16,13 @@ public class Oauth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/fail")
-                .build().toUriString();
-        getRedirectStrategy().sendRedirect(request,response,targetUrl);
+        if(exception.getMessage().equals("이메일 중복")) {
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/fail")
+                    .build().toUriString();
+            getRedirectStrategy().sendRedirect(request,response,targetUrl);
+        } else {
+            System.out.println("에러 메세지 : "+exception.getMessage());
+            System.out.println("에러 클래스 : "+exception.getClass());
+        }
     }
 }

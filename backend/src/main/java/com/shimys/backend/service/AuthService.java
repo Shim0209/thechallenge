@@ -28,7 +28,11 @@ public class AuthService {
     @Value("${email.google.password}")
     private String googlePassword;
 
-
+    /**
+     * 유저 정보를 받아 유저네임 중복 검사 및 유저 생성
+     * @param user
+     * @return
+     */
     @Transactional
     public User 회원가입(User user){
         if(userRepository.findByUsername(user.getUsername()) != null){
@@ -47,6 +51,11 @@ public class AuthService {
         return userRepository.save(user);
     }
 
+    /**
+     * 이메일 주소를 받아 이메일 중복여부 검사 및 해당 이메일로 인증코드 전송
+     * @param email 이메일 주소
+     * @return 인증코드
+     */
     @Transactional
     public Integer 이메일인증(String email){
         if(userRepository.findByEmail(email) != null){

@@ -18,6 +18,12 @@ const api = axios.create({
 //     }
 // }
 
+const authConfig = {
+    headers: {
+        'Authorization': localStorage.getItem('AccessToken')
+    }
+}
+
 export const authApi = {
     // 회원가입
     signup:(form) => api.post("auth/signup", form),
@@ -42,4 +48,5 @@ export const utilApi = {
 }
 export const challengeApi = {
     create:(form, config) => api.post("challenge/create",form, config),
+    challenge:(id) => api.get(`challenge/${id}`, authConfig),
 }

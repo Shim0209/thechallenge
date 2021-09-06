@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Nav from 'components/Nav';
-
+// 자신이 운영하는 챌린지 리스트를 출력하는 페이지
 const Container = styled.div`
     background-color: #fafafa;
     width: 100%;
@@ -48,15 +48,6 @@ const Td = styled.td`
     overflow-x: scroll;
     align-self: center;
 `;
-const Btn = styled.a`
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    &:hover{
-        background-color: black;
-        color: white;
-    }
-`;
 const RBtn = styled.a`
     padding: 5px 10px;
     cursor: pointer;
@@ -74,6 +65,13 @@ const BBtn = styled.a`
 `;
 const SLink = styled(Link)`
     font-weight: 500;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    &:hover{
+        background-color: black;
+        color: white;
+    }
 `;
 
 
@@ -101,7 +99,75 @@ const Manage = (props) => {
                             <Tr>
                                 <Td>
                                     <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
+                                        1
+                                    </SLink>
+                                </Td>
+                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
+                                <Td>대기</Td>
+                                <Td>34일</Td>
+                                <Td>
+                                    <RBtn>등록전</RBtn>
+                                </Td>
+                                <Td>
+                                    <BBtn>등록완료</BBtn>
+                                </Td>
+                                <Td>0</Td>
+                            </Tr>
+                            <Tr>
+                                <Td>
+                                    <SLink to={`/challenge/manage/${2}`}>
+                                        2
+                                    </SLink>
+                                </Td>
+                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
+                                <Td>대기</Td>
+                                <Td>34일</Td>
+                                <Td>
+                                    <RBtn>등록전</RBtn>
+                                </Td>
+                                <Td>
+                                    <BBtn>등록완료</BBtn>
+                                </Td>
+                                <Td>0</Td>
+                            </Tr>
+                            <Tr>
+                                <Td>
+                                    <SLink to={`/challenge/manage/${3}`}>
+                                        3
+                                    </SLink>
+                                </Td>
+                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
+                                <Td>대기</Td>
+                                <Td>34일</Td>
+                                <Td>
+                                    <RBtn>등록전</RBtn>
+                                </Td>
+                                <Td>
+                                    <BBtn>등록완료</BBtn>
+                                </Td>
+                                <Td>0</Td>
+                            </Tr>
+                            <Tr>
+                                <Td>
+                                    <SLink to={`/challenge/manage/${4}`}>
+                                        4
+                                    </SLink>
+                                </Td>
+                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
+                                <Td>대기</Td>
+                                <Td>34일</Td>
+                                <Td>
+                                    <RBtn>등록전</RBtn>
+                                </Td>
+                                <Td>
+                                    <BBtn>등록완료</BBtn>
+                                </Td>
+                                <Td>0</Td>
+                            </Tr>
+                            <Tr>
+                                <Td>
+                                    <SLink to={`/challenge/manage/${5}`}>
+                                        5
                                     </SLink>
                                 </Td>
                                 <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
@@ -118,7 +184,7 @@ const Manage = (props) => {
                             <Tr>
                                 <Td>
                                     <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
+                                        1
                                     </SLink>
                                 </Td>
                                 <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
@@ -135,7 +201,7 @@ const Manage = (props) => {
                             <Tr>
                                 <Td>
                                     <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
+                                        1
                                     </SLink>
                                 </Td>
                                 <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
@@ -152,75 +218,7 @@ const Manage = (props) => {
                             <Tr>
                                 <Td>
                                     <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        <Btn title="챌린지 페이지로 이동">1</Btn>
+                                        1
                                     </SLink>
                                 </Td>
                                 <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
