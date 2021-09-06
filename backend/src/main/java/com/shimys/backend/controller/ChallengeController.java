@@ -35,6 +35,8 @@ public class ChallengeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> challenge(@PathVariable Long id) throws IOException {
         Challenge challengeEntity = challengeService.챌린지찾기(id);
+
+        // 이미지 byte[]로 리턴 => 클래스로 분리하기!!
         InputStream in = getClass().getResourceAsStream("/static/images/"+challengeEntity.getMainImageUrl());
         List result = new ArrayList();
         result.add(challengeEntity);
