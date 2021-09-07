@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -101,7 +102,7 @@ public class ChallengeService {
     }
 
     @Transactional
-    public Challenge 챌린지찾기(Long challengeId){
-        return challengeRepository.getById(challengeId);
+    public Optional<Challenge> 챌린지찾기(Long challengeId){
+        return challengeRepository.findById(challengeId);
     }
 }

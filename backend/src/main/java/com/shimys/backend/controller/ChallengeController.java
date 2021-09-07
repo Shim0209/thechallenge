@@ -7,6 +7,7 @@ import com.shimys.backend.security.auth.PrincipalDetails;
 import com.shimys.backend.service.ChallengeService;
 import com.shimys.backend.util.dto.CommonResponseDto;
 import com.shimys.backend.util.dto.challenge.ChallengeCreateDto;
+import com.shimys.backend.util.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,14 +36,16 @@ public class ChallengeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> challenge(@PathVariable Long id) throws IOException {
-        Challenge challengeEntity = challengeService.챌린지찾기(id);
+        Optional<Challenge> challengeEntity = challengeService.챌린지찾기(id);
+
+        if(!challengeEntity.isPresent()){
+            return new ResponseEntity<>(new CommonResponseDto<>(-1, "챌린지 찾기 실패", "챌린지 정보가 존재하지 않습니다."), HttpStatus.NOT_FOUND);
+        }
 
         // 이미지 byte[]로 리턴 => 클래스로 분리하기!!
-        InputStream in = getClass().getResourceAsStream("/static/images/"+challengeEntity.getMainImageUrl());
-        List result = new ArrayList();
-        result.add(challengeEntity);
-        result.add(in.readAllBytes());
+        InputStream in = getClass().getResourceAsStream("/static/images/"+challengeEntity.get().getMainImageUrl());
+        challengeEntity.get().setImageByte(in.readAllBytes());
 
-        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", result), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", challengeEntity.get()), HttpStatus.OK);
     }
 }

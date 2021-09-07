@@ -28,6 +28,9 @@ public class Challenge {
     private LocalDateTime createDate;   // 생성날짜
     private boolean isAvailable;
 
+    @Transient
+    private byte[] imageByte;
+
     @PrePersist
     public void createDate(){
         this.createDate = LocalDateTime.now();

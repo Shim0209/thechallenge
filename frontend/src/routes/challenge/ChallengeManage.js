@@ -48,26 +48,30 @@ const ChallengeManage = (props) => {
     const {id} = useParams(); // 서버에서 받을때 사용
     const location = useLocation(); 
     const getData = async() => {
-        let result = null;
-        try {
-            result = await challengeApi.challenge(id);
-            console.log('결과 원본',result);
+        await challengeApi.challenge(id)
+        .then((result) => {
+            console.log('성공',result);
             setState({
                 ...state,
                 loading:false,
                 challenge: result.data.data
             })
-        } catch {
-            setState({
-                ...state,
-                loading: false,
-                error: '챌린지 정보를 찾을 수 없습니다.'
-            })
-        }
+        })
+        .catch((error) => {
+            console.log('에러',error.response.data);
+            if(error.response.data.code === -1){
+                setState({
+                    ...state,
+                    loading: false,
+                    error: error.response.data.data
+                })
+            }
+        })
     }
     const init = () => {
         if(location.state === undefined){
             // axios로 해당 챌린지 정보 받아와야함.
+            console.log('ccc');
             getData();
         } else {
             // 받아온 데이터를 바로 사용
@@ -81,8 +85,7 @@ const ChallengeManage = (props) => {
     useEffect(init,[]);
 
 
-    console.log('데이터',state);
-    console.log('이미지?',state.challenge);
+    console.log('스테이트 데이터',state);
 
     return (
         <>
@@ -99,21 +102,28 @@ const ChallengeManage = (props) => {
                     ? <Loader />
                     : 
                     <>
-                        <Image src={`data:image/jpeg;base64,${state.challenge[1]}`} />
+                    {
+                        state.error !== null 
+                        ? <div>{state.error}</div>
+                        :
+                        <>
+                            데이터 정상
                         {/* <div>{state.challenge.title}</div>
 
-                        <div>{state.challenge.status}</div>
-                        <p>
-                            <Image src={`http://localhost:8080/images/${state.challenge.mainImageUrl}`} />
-                        </p>
-                        <div>{state.challenge.startDate}</div>
-                        <div>{state.challenge.endDate}</div>
-                        {state.challenge.assignments.map(assign => {
-                            <div>{assign.type}</div>
-                        })}
-                        {state.challenge.tags.map(tag => {
-                            <div>{tag.tag}</div>
-                        })} */}
+                            <div>{state.challenge.status}</div>
+                            <p>
+                                <Image src={`http://localhost:8080/images/${state.challenge.mainImageUrl}`} />
+                            </p>
+                            <div>{state.challenge.startDate}</div>
+                            <div>{state.challenge.endDate}</div>
+                            {state.challenge.assignments.map(assign => {
+                                <div>{assign.type}</div>
+                            })}
+                            {state.challenge.tags.map(tag => {
+                                <div>{tag.tag}</div>
+                            })} */}
+                        </>
+                    }
                     </>
                 }
                 </RightBox>
