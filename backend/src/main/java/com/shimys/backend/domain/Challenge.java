@@ -21,7 +21,9 @@ public class Challenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;   // 타이틀 5자이상
-    private String mainImageUrl;    // 메인이미지 2mb
+//    @Column(columnDefinition = "MEDIUMTEXT")
+//    private byte[] image;    // 메인이미지 2mb
+    private String image;
     private String status;  // 대기, 진행, 종료
     private LocalDateTime startDate;    // 시작날짜
     private LocalDateTime endDate;      // 끝날짜
@@ -63,4 +65,11 @@ public class Challenge {
     @JsonIgnoreProperties({"challenge"})
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY)
     private List<ChallengeAssignment> assignments; // 과제
+
+    public User toSimpleUser(Challenge challenge){
+        return User.builder()
+                .id(challenge.getHost().getId())
+                .name(challenge.getHost().getName())
+                .build();
+    }
 }

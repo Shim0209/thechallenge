@@ -9,11 +9,13 @@ import com.shimys.backend.util.dto.CommonResponseDto;
 import com.shimys.backend.util.dto.challenge.ChallengeCreateDto;
 import com.shimys.backend.util.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,10 +27,13 @@ import java.util.Optional;
 @RequestMapping("/challenge")
 public class ChallengeController {
 
+    @Value("${file.challengeImagePath}")
+    private String challengeImageFolder;
+
     private final ChallengeService challengeService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(ChallengeCreateDto challengeCreateDto, @AuthenticationPrincipal PrincipalDetails principalDetails){
+    public ResponseEntity<?> create(ChallengeCreateDto challengeCreateDto, @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
         Challenge challengeEntity = challengeService.챌린지생성(challengeCreateDto, principalDetails);
         // 챌린지 생성후 /challenge/manage/{생성한 챌린지 id} 페이지로 이동.
         return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 생성 성공", challengeEntity), HttpStatus.CREATED);
@@ -38,12 +43,9 @@ public class ChallengeController {
     public ResponseEntity<?> challenge(@PathVariable Long id) throws IOException {
         Optional<Challenge> challengeEntity = challengeService.챌린지찾기(id);
 
-        if(!challengeEntity.isPresent()){
-            return new ResponseEntity<>(new CommonResponseDto<>(-1, "챌린지 찾기 실패", "챌린지 정보가 존재하지 않습니다."), HttpStatus.NOT_FOUND);
-        }
-
         // 이미지 byte[]로 리턴 => 클래스로 분리하기!!
-        InputStream in = getClass().getResourceAsStream("/static/images/"+challengeEntity.get().getMainImageUrl());
+//        InputStream in = getClass().getResourceAsStream(challengeImageFolder+challengeEntity.get().getImage());
+        InputStream in = new FileInputStream(challengeImageFolder+challengeEntity.get().getImage());
         challengeEntity.get().setImageByte(in.readAllBytes());
 
         return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", challengeEntity.get()), HttpStatus.OK);

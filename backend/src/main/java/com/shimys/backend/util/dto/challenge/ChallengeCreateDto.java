@@ -33,7 +33,7 @@ public class ChallengeCreateDto {
     public Challenge toChallengeEntity(String imageName, LocalDateTime startDate, LocalDateTime endDate, PrincipalDetails principalDetails){
         return Challenge.builder()
                 .title(title)
-                .mainImageUrl(imageName)
+                .image(imageName)
                 .startDate(startDate)
                 .endDate(endDate)
                 .status("대기")

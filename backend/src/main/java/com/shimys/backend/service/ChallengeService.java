@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,7 +46,7 @@ public class ChallengeService {
      * @return 생성한 챌린지 정보
      */
     @Transactional
-    public Challenge 챌린지생성(ChallengeCreateDto challengeCreateDto, PrincipalDetails principalDetails){
+    public Challenge 챌린지생성(ChallengeCreateDto challengeCreateDto, PrincipalDetails principalDetails) throws IOException {
         Gson gson = new Gson();
 
         // 1. 챌린지 등록
@@ -88,21 +89,25 @@ public class ChallengeService {
             challengeTagList.add(challengeTagEntity);
         }
 
+        // 이미지 바이트 담기
+        byte[] imageByte = challengeCreateDto.getImage().getBytes();
+        challengeEntity.setImageByte(imageByte);
+        System.out.println("이미지 : " + imageByte.toString());
+
         // 해당 챌린지의 과제, 태그 데이터 담기
         challengeEntity.setAssignments(challengeAssignmentList);
         challengeEntity.setTags(challengeTagList);
 
         // 유저 객체 변경 (정보보호를 위해서)
-        User securityUser = new User();
-        securityUser.setId(challengeEntity.getHost().getId());
-        securityUser.setName(challengeEntity.getHost().getName());
-        challengeEntity.setHost(securityUser);
+        challengeEntity.setHost(challengeEntity.toSimpleUser(challengeEntity));
 
         return challengeEntity;
     }
 
     @Transactional
     public Optional<Challenge> 챌린지찾기(Long challengeId){
-        return challengeRepository.findById(challengeId);
+        Optional<Challenge> result = challengeRepository.findById(challengeId);
+        result.get().setHost(result.get().toSimpleUser(result.get()));
+        return result;
     }
 }

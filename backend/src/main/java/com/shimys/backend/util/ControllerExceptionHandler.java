@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.NoSuchElementException;
+
 @RestController
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -23,5 +25,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<?> customValidationException(CustomValidationException e){
         return new ResponseEntity<>(new CommonResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<?> noSuchElementException(NoSuchElementException e){
+        return new ResponseEntity<>(new CommonResponseDto<>(-1, "챌린지 찾기 실패", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
