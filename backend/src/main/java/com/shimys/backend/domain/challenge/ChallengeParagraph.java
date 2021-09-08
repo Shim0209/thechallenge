@@ -28,6 +28,6 @@ public class ChallengeParagraph {
 
     @JsonIgnoreProperties({"paragraphs"})
     @JoinColumn(name = "challengeId")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Challenge challenge;
 }

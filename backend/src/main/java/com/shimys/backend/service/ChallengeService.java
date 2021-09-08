@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,9 +107,21 @@ public class ChallengeService {
     }
 
     @Transactional
-    public Optional<Challenge> 챌린지찾기(Long challengeId){
+    public Optional<Challenge> 챌린지찾기(Long challengeId) throws IOException{
         Optional<Challenge> result = challengeRepository.findById(challengeId);
+        // 유저 객체 변경
         result.get().setHost(result.get().toSimpleUser(result.get()));
+
+
+        // 이미지를 byte[] 형태로 담기
+        InputStream in = new FileInputStream(challengeImageFolder+result.get().getImage());
+        result.get().setImageByte(in.readAllBytes());
+        return result;
+    }
+
+    @Transactional
+    public List<Challenge> 나의챌린지찾기(Long hostId) throws IOException {
+        List<Challenge> result = challengeRepository.findChallengesByHost(hostId);
         return result;
     }
 }

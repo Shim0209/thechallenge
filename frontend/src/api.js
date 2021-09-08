@@ -50,4 +50,12 @@ export const challengeApi = {
         headers: {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
+    myChallenge:() => api.get('challenge/mychallenge', {
+        headers: {
+            'Authorization': localStorage.getItem('AccessToken')
+    }}),
+    createParagraphs:(form) => api.post("paragraphs/create",form, {
+        headers: {
+            'Authorization': localStorage.getItem('AccessToken')
+    }}),
 }

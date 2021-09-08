@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Nav from 'components/Nav';
+import { Helmet } from 'react-helmet';
+import { challengeApi } from 'api';
+import Loader from 'components/Loader';
 // 자신이 운영하는 챌린지 리스트를 출력하는 페이지
 const Container = styled.div`
     background-color: #fafafa;
@@ -29,11 +32,21 @@ const Table = styled.table`
 `;
 const Thead = styled.thead``;
 const Tbody = styled.tbody``;
+const HTr = styled.tr`
+    border-bottom: 1px solid gray;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+`;
 const Tr = styled.tr`
     border-bottom: 1px solid gray;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    &:hover{
+        background-color: black;
+        color: white;
+    }
 `;
+
 const Th = styled.th`
     font-size: 15px;
     font-weight: 700;
@@ -65,180 +78,90 @@ const BBtn = styled.a`
 `;
 const SLink = styled(Link)`
     font-weight: 500;
-    padding: 5px 10px;
     cursor: pointer;
-    border-radius: 5px;
-    &:hover{
-        background-color: black;
-        color: white;
-    }
 `;
 
 
 const Manage = (props) => {
-    return (
-        <Container>
-            <LeftBox>
-                <Nav />
-            </LeftBox>
-            <RightBox>
-                <ManageBox>
-                    <Table>
-                        <Thead>
-                            <Tr>
-                                <Th>ID</Th>
-                                <Th>Title</Th>
-                                <Th>Status</Th>
-                                <Th>D-day</Th>
-                                <Th>Assignment</Th>
-                                <Th>Paragraph</Th>
-                                <Th>Participants</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        1
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${2}`}>
-                                        2
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${3}`}>
-                                        3
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${4}`}>
-                                        4
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${5}`}>
-                                        5
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        1
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${1}`}>
-                                        1
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>
-                                    <SLink to={`/challenge/manage/${13}`}>
-                                        13
-                                    </SLink>
-                                </Td>
-                                <Td>스프링부트 Rest 서버 기초완성 2주반 다함께 차차차</Td>
-                                <Td>대기</Td>
-                                <Td>34일</Td>
-                                <Td>
-                                    <RBtn>등록전</RBtn>
-                                </Td>
-                                <Td>
-                                    <BBtn>등록완료</BBtn>
-                                </Td>
-                                <Td>0</Td>
-                            </Tr>
-                            
-                        </Tbody>
-                    </Table>
-                </ManageBox>
+    const [state, setState] = useState({
+        data:null,
+        loading:true,
+        error:null
+    });
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getData = async() => {
+        await challengeApi.myChallenge()
+        .then((result) => {
+            console.log('성공',result);
+            setState({
+                ...state,
+                data: result.data.data,
+                loading:false
+            })
+        })
+        .catch((error) => {
+            console.log('실패',error);
+            setState({
+                ...state,
+                error:error,
+                loading:false
+            })
+        })
+        
+    }
 
-            </RightBox>
-        </Container>
+    useEffect(getData, [])
+
+    console.log('state',state);
+
+    return (
+        <>
+            <Helmet>
+                <title>챌린지 운영</title>
+            </Helmet>
+            <Container>
+                <LeftBox>
+                    <Nav />
+                </LeftBox>
+                <RightBox>
+                {
+                    state.loading
+                    ?
+                    <Loader />
+                    :
+                    <ManageBox>
+                        <Table>
+                            <Thead>
+                                <HTr>
+                                    <Th>ID</Th>
+                                    <Th>Title</Th>
+                                    <Th>Status</Th>
+                                    <Th>D-day</Th>
+                                    <Th>Participants</Th>
+                                </HTr>
+                            </Thead>
+                            <Tbody>
+                                {
+                                    state.data.map((challenge,index) => 
+                                        <SLink key={index} to={`/challenge/manage/${challenge.id}`}>
+                                            <Tr>
+                                                <Td>{challenge.id}</Td>
+                                                <Td>{challenge.title}</Td>
+                                                <Td>{challenge.status}</Td>
+                                                <Td>{parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'}</Td>
+                                                <Td>{challenge.participants != null ? challenge.participants.length : '0'}</Td>
+                                            </Tr>
+                                        </SLink>
+                                    )
+                                }                    
+                            </Tbody>
+                        </Table>
+                    </ManageBox>
+                }
+                </RightBox>
+            </Container>
+        </>
     )
 }
 

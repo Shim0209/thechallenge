@@ -46,12 +46,12 @@ const FormData = styled.div`
     display: flex;
 `;
 const MainImage = styled.img`
-    width: 45%;
+    width: 50%;
     border-radius: 10px;
 `;
 const DataBox = styled.div`
     padding: 5px;
-    width: 55%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -98,7 +98,6 @@ const TagItem = styled.div`
     }
 `;
 const ParaBox = styled.div`
-    border: 1px solid gray;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -144,7 +143,6 @@ const ParaBtn = styled.a`
     }
 `;
 const AssignBox = styled.div`
-    border: 1px solid gray;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -156,14 +154,19 @@ const AssignHeader = styled.div`
     padding: 5px;
     background-color: black;
     color: white;
+    margin-bottom: 5px;
 `;
 const AssignBody = styled.div`
     display: flex;
     flex-direction: column;
 `;
 const AssignItem = styled.a`
-    padding: 5px;
-    border-bottom: 1px solid black;
+    
+`;
+const KeyBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
 `;
 
 
@@ -227,6 +230,7 @@ const ChallengeManage = (props) => {
         })
     }
     const init = () => {
+        console.log('init');
         if(location.state === undefined){
             // axios로 해당 챌린지 정보 받아와야함.
             console.log('ccc');
@@ -255,7 +259,30 @@ const ChallengeManage = (props) => {
     }
     useEffect(init,[]);
 
-    console.log('테스트 데이터',challenge);
+    console.log('data',challenge);
+
+    const onParaSave = async(e) => {
+        // console.log('e',e.target);
+        const title = document.getElementById('paraTitle').value;
+        const text = document.getElementById('paraText').value;
+        // console.log('title',title);
+        // console.log('text',text);
+        if(title !== null && text !==null){
+            const paragraphs = {"title":title, "text":text, "challengeId":challenge.id};
+
+            // 데이터베이스에 적용
+            const result = await challengeApi.createParagraphs(paragraphs);
+            console.log('paragraphs 생성 결과',result);
+            // 저장한 paragraphs 객체를 받아서 state에 담기
+            const tempParagraphs = challenge.paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text});
+            setChallenge({
+                ...challenge,
+                paragraphs:tempParagraphs
+            })
+        } else {
+            alert('비어있는 칸을 모두 채워주세요.');
+        }
+    }
 
     return (
         <>
@@ -307,8 +334,8 @@ const ChallengeManage = (props) => {
                                         <DataInput type="text" placeholder="태그 추가" />
                                     </DataItem>
                                     <TagBox>
-                                            {challenge.tags.map(tag => 
-                                                <TagItem>{tag.tag}</TagItem>
+                                            {challenge.tags.map((tag,index) => 
+                                                <TagItem key={index}>{tag.tag}</TagItem>
                                             )}
                                     </TagBox>
                                     <DataBtn>저장하기</DataBtn>
@@ -320,23 +347,20 @@ const ChallengeManage = (props) => {
                                             
                                     <ParaItem>
                                         <ParaLabel>타이틀</ParaLabel>    
-                                        <ParaInput type="text" placeholder="타이틀을 작성하세요" />
+                                        <ParaInput id="paraTitle" type="text" placeholder="타이틀을 작성하세요" />
                                     </ParaItem>
                                     <ParaItem>
                                         <ParaLabel>내용</ParaLabel>    
-                                        <ParaTextarea type="text" placeholder="내용을 작성하세요" rows="7" />
+                                        <ParaTextarea id="paraText" type="text" placeholder="내용을 작성하세요" rows="7" />
                                     </ParaItem>
-                                {/* {state.challenge.paragraphs.map(data =>
-                                    <ParaItem>data</ParaItem>
-                                )} */}
                                 </ParaBody>
-                                <ParaBtn>저장하기</ParaBtn>
+                                <ParaBtn onClick={onParaSave}>저장하기</ParaBtn>
                             </ParaBox>
                             <AssignBox>
                                 <AssignHeader>과제</AssignHeader>
                                 <AssignBody>
-                                {challenge.assignments.map(assign => 
-                                    <>
+                                {challenge.assignments.map((assign,index) => 
+                                    <KeyBox key={index}>
                                         <AssignItem>
                                             <div>{assign.submitDate.substr(0,10)+' -> 제출방식 : '+assign.type}</div>
                                             <ParaItem>
@@ -371,7 +395,7 @@ const ChallengeManage = (props) => {
                                                 <ParaBtn>저장하기</ParaBtn>
                                             </>
                                         }
-                                    </>
+                                    </KeyBox>
                                 )}
                                 </AssignBody>
 
