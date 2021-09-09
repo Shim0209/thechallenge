@@ -405,15 +405,16 @@ const ChallengeManage = (props) => {
 
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 수정요망 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // 값이 제대로 안 담아짐
-            const tempFixed = findAssign[0].paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text});
-
+            const tempAssignmentsPara = findAssign[0].paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text});
+            findAssign[0].paragraphs = tempAssignmentsPara;
+            console.log('test',findAssign);
 
 
 
 
 
             const leaveAssign = challenge.assignments.filter(assign => assign.id !== assignId);
-            const tempAssignments = [...tempFixed, ...leaveAssign].sort((a,b)=>a.id-b.id);
+            const tempAssignments = [...findAssign, ...leaveAssign].sort((a,b)=>a.id-b.id);
 
             
             // 저장한 assignParagraphs 객체를 받아서 state에 담기
