@@ -54,4 +54,8 @@ export const challengeApi = {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
     challengeUpdate:(form, config) => api.post("challenge/update",form,config),
+    createAssignParagraphs:(form) => api.post("paragraphs/assign/create",form,{
+        headers: {
+            'Authorization': localStorage.getItem('AccessToken')
+    }}),
 }

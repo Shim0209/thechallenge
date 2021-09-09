@@ -315,7 +315,7 @@ const ChallengeManage = (props) => {
                 }
             })
             if(!dup){
-                 const tempTags = challenge.tags.concat({"id":null, "tag":inputTag});
+                const tempTags = challenge.tags.concat({"id":null, "tag":inputTag});
                 setChallenge({
                     ...challenge,
                     tags: tempTags
@@ -383,6 +383,51 @@ const ChallengeManage = (props) => {
         }
 
     }
+
+    const onAssignSave = async(e) => {
+        const assignId = parseInt(e.target.id.substr(14));
+        const title = document.getElementById('assignParaTitle-'+assignId).value;
+        const text = document.getElementById('assignParaText-'+assignId).value;
+
+        console.log('assignId',assignId);
+        
+
+        if(title !== null && text !==null){
+            const assignParagraphs = {"title":title, "text":text, "assignId":assignId};
+
+            // 데이터베이스에 assignmentParagraphs 저장
+            const result = await challengeApi.createAssignParagraphs(assignParagraphs);
+
+            //
+            const findAssign = challenge.assignments.filter(assign => assign.id === assignId);
+            
+
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 수정요망 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // 값이 제대로 안 담아짐
+            const tempFixed = findAssign[0].paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text});
+
+
+
+
+
+
+            const leaveAssign = challenge.assignments.filter(assign => assign.id !== assignId);
+            const tempAssignments = [...tempFixed, ...leaveAssign].sort((a,b)=>a.id-b.id);
+
+            
+            // 저장한 assignParagraphs 객체를 받아서 state에 담기
+
+            setChallenge({
+                ...challenge,
+                assignments: tempAssignments
+            })
+        } else {
+            alert('비어있는 칸을 모두 채워주세요.');
+        }
+    }
+
+    console.log('state 체크',challenge);
 
     return (
         <>
@@ -478,14 +523,14 @@ const ChallengeManage = (props) => {
                                             <div>{assign.submitDate.substr(0,10)+' -> 제출방식 : '+assign.type}</div>
                                             <ParaItem>
                                                 <ParaLabel>타이틀</ParaLabel>    
-                                                <ParaInput type="text" placeholder="타이틀을 작성하세요" />
+                                                <ParaInput id={`assignParaTitle-${assign.id}`} type="text" placeholder="타이틀을 작성하세요" />
                                             </ParaItem>
                                             <ParaItem>
                                                 <ParaLabel>내용</ParaLabel>    
-                                                <ParaTextarea type="text" placeholder="내용을 작성하세요" rows="7" />
+                                                <ParaTextarea id={`assignParaText-${assign.id}`} type="text" placeholder="내용을 작성하세요" rows="7" />
                                             </ParaItem>
                                         </AssignItem>
-                                        <ParaBtn>저장하기</ParaBtn>
+                                        <ParaBtn id={`assignParaBtn-${assign.id}`} onClick={onAssignSave}>저장하기</ParaBtn>
                                         {assign.type === 'quiz' && 
                                             <>
                                                 <ParaItem>
