@@ -11,11 +11,14 @@ import com.shimys.backend.repository.ChallengeTagRepository;
 import com.shimys.backend.security.auth.PrincipalDetails;
 import com.shimys.backend.util.dto.challenge.AssignmentCreateDto;
 import com.shimys.backend.util.dto.challenge.ChallengeCreateDto;
+import com.shimys.backend.util.dto.challenge.ChallengeUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +39,7 @@ public class ChallengeService {
     @Value("${file.challengeImagePath}")
     private String challengeImageFolder;
 
+    private final Gson gson;
     private final ChallengeRepository challengeRepository;
     private final ChallengeAssignmentRepository challengeAssignmentRepository;
     private final ChallengeTagRepository challengeTagRepository;
@@ -49,20 +53,10 @@ public class ChallengeService {
      */
     @Transactional
     public Challenge 챌린지생성(ChallengeCreateDto challengeCreateDto, PrincipalDetails principalDetails) throws IOException {
-        Gson gson = new Gson();
 
         // 1. 챌린지 등록
         // 이미지 파일 저장 (with UUID)
-        UUID uuid = UUID.randomUUID();
-        String imageName = uuid+"_"+challengeCreateDto.getImage().getOriginalFilename();
-
-        Path imageFilePath = Paths.get(challengeImageFolder+imageName);
-
-        try {
-            Files.write(imageFilePath, challengeCreateDto.getImage().getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String imageName = saveImage(challengeCreateDto.getImage());
 
         // 날짜 데이터로 LocalDate 객체 만들기
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -124,4 +118,76 @@ public class ChallengeService {
         List<Challenge> result = challengeRepository.findChallengesByHost(hostId);
         return result;
     }
+
+    @Transactional
+    public int 챌린지업데이트(ChallengeUpdateDto challengeUpdateDto) {
+        Challenge challengeEntity = challengeRepository.findById(challengeUpdateDto.getChallengeId()).get();
+        // 이미지를 폴더에 저장
+        String imageName = saveImage(challengeUpdateDto.getImage());
+        // 기존 이미지를 폴더에서 삭제
+        deleteImageFromFolder(challengeEntity.getImage());
+        // 타이틀, 이미지 업데이트
+        int updateResult = challengeRepository
+                .updateChallengeTitleAndImageById(
+                        challengeUpdateDto.getChallengeId(),
+                        challengeUpdateDto.getTitle(),
+                        imageName
+                );
+        // 해당 챌린지의 모든 태그 삭제
+        int deleteTagResult = challengeRepository.deleteChallengeTagById(challengeUpdateDto.getChallengeId());
+        // 챌린지 태그 새로 등록
+        ChallengeTag[] challengeTags = gson.fromJson(challengeUpdateDto.getTags() ,ChallengeTag[].class);
+        for (ChallengeTag tag : challengeTags){
+            tag.setChallenge(challengeEntity);
+            challengeTagRepository.save(tag);
+        }
+
+        System.out.println("체크 updateResult : " + updateResult);
+        System.out.println("체크 deleteTagResult : " + deleteTagResult);
+        if (updateResult == 1 && deleteTagResult == 3) {
+            return 1;
+        }
+        return -1;
+    }
+
+    /**
+     * 이미지를 서버 폴더에 저장한다.
+     * @param image 멀티파트파일
+     * @return 폴더에 저장된 이미지 이름
+     */
+    public String saveImage(MultipartFile image){
+        UUID uuid = UUID.randomUUID();
+        String imageName = uuid+"_"+image.getOriginalFilename();
+
+        Path imageFilePath = Paths.get(challengeImageFolder+imageName);
+
+        try {
+            Files.write(imageFilePath, image.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imageName;
+    }
+
+    /**
+     * 이미지를 서버 폴더에서 삭제한다.
+     * @param imageName 폴더에 저장된 이미지 이름
+     * @return 성공 : 1, 실패 : -1
+     */
+    public void deleteImageFromFolder(String imageName){
+        File imageFolder = new File(challengeImageFolder);
+
+        if(imageFolder.exists()){
+            File[] imageList = imageFolder.listFiles();
+
+            for(File image : imageList){
+                if(image.getName().equals(imageName)){
+                    image.delete();
+                    return;
+                }
+            }
+        }
+    }
+
+
 }

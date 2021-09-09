@@ -61,21 +61,6 @@ const Td = styled.td`
     overflow-x: scroll;
     align-self: center;
 `;
-const RBtn = styled.a`
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    background-color: red;
-    color: white;
-    
-`;
-const BBtn = styled.a`
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    background-color: #0094f6;
-    color: white;
-`;
 const SLink = styled(Link)`
     font-weight: 500;
     cursor: pointer;
@@ -130,34 +115,42 @@ const Manage = (props) => {
                     ?
                     <Loader />
                     :
-                    <ManageBox>
-                        <Table>
-                            <Thead>
-                                <HTr>
-                                    <Th>ID</Th>
-                                    <Th>Title</Th>
-                                    <Th>Status</Th>
-                                    <Th>D-day</Th>
-                                    <Th>Participants</Th>
-                                </HTr>
-                            </Thead>
-                            <Tbody>
-                                {
-                                    state.data.map((challenge,index) => 
-                                        <SLink key={index} to={`/challenge/manage/${challenge.id}`}>
-                                            <Tr>
-                                                <Td>{challenge.id}</Td>
-                                                <Td>{challenge.title}</Td>
-                                                <Td>{challenge.status}</Td>
-                                                <Td>{parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'}</Td>
-                                                <Td>{challenge.participants != null ? challenge.participants.length : '0'}</Td>
-                                            </Tr>
-                                        </SLink>
-                                    )
-                                }                    
-                            </Tbody>
-                        </Table>
-                    </ManageBox>
+                    <>
+                        {
+                            state.data.length === 0
+                            ? 
+                            <div>운영중인 챌린지가 존재하지 않습니다.</div>
+                            :
+                            <ManageBox>
+                                <Table>
+                                    <Thead>
+                                        <HTr>
+                                            <Th>ID</Th>
+                                            <Th>Title</Th>
+                                            <Th>Status</Th>
+                                            <Th>D-day</Th>
+                                            <Th>Participants</Th>
+                                        </HTr>
+                                    </Thead>
+                                    <Tbody>
+                                        {
+                                            state.data.map((challenge,index) => 
+                                                <SLink key={index} to={`/challenge/manage/${challenge.id}`}>
+                                                    <Tr>
+                                                        <Td>{challenge.id}</Td>
+                                                        <Td>{challenge.title}</Td>
+                                                        <Td>{challenge.status}</Td>
+                                                        <Td>{parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'}</Td>
+                                                        <Td>{challenge.participants != null ? challenge.participants.length : '0'}</Td>
+                                                    </Tr>
+                                                </SLink>
+                                            )
+                                        }                    
+                                    </Tbody>
+                                </Table>
+                            </ManageBox>
+                        }
+                    </>
                 }
                 </RightBox>
             </Container>

@@ -17,11 +17,6 @@ const api = axios.create({
 //         'Authorization': localStorage.getItem('AccessToken')
 //     }
 // }
-
-const authConfig = {
-    
-}
-
 export const authApi = {
     // 회원가입
     signup:(form) => api.post("auth/signup", form),
@@ -45,17 +40,18 @@ export const utilApi = {
     imageUpload:(form, config) => api.post("image", form,config),
 }
 export const challengeApi = {
-    create:(form, config) => api.post("challenge/create",form, config),
+    create:(form, config) => api.post("challenge/create",form,config),
     challenge:(id) => api.get(`challenge/${id}`, {
         headers: {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
-    myChallenge:() => api.get('challenge/mychallenge', {
+    myChallenge:() => api.get('challenge/mychallenge',{
         headers: {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
-    createParagraphs:(form) => api.post("paragraphs/create",form, {
+    createParagraphs:(form) => api.post("paragraphs/create",form,{
         headers: {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
+    challengeUpdate:(form, config) => api.post("challenge/update",form,config),
 }

@@ -5,6 +5,7 @@ import com.shimys.backend.security.auth.PrincipalDetails;
 import com.shimys.backend.service.ChallengeService;
 import com.shimys.backend.util.dto.CommonResponseDto;
 import com.shimys.backend.util.dto.challenge.ChallengeCreateDto;
+import com.shimys.backend.util.dto.challenge.ChallengeUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,17 @@ public class ChallengeController {
         List<Challenge> challengeEntityList = challengeService.나의챌린지찾기(principalDetails.getUser().getId());
 
         return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 찾기 성공", challengeEntityList), HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> update(ChallengeUpdateDto challengeUpdateDto) {
+        System.out.println("챌린지 서비스 업데이트 : " + challengeUpdateDto.toString());
+        int result = challengeService.챌린지업데이트(challengeUpdateDto);
+
+        System.out.println("챌린지 서비스 결과 : " + result);
+        if(result == -1){
+            return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 정보수정 실패", null), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new CommonResponseDto<>(1, "챌린지 정보수정 성공", null), HttpStatus.OK);
     }
 }

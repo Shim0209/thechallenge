@@ -1,6 +1,7 @@
 package com.shimys.backend.config;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.google.gson.Gson;
 import com.shimys.backend.repository.UserRepository;
 import com.shimys.backend.security.auth.AuthenticationFilter;
 import com.shimys.backend.security.auth.AuthorizationFilter;
@@ -40,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public Gson gson() {return new Gson(); }
 
     /**
      * 스프링 시큐리티 설정

@@ -42,12 +42,29 @@ const ChallengeForm = styled.div`
     display: flex;
     flex-direction: column;
 `;
-const FormData = styled.div`
+const FormDataBox = styled.div`
     display: flex;
 `;
-const MainImage = styled.img`
+const ImageBox = styled.label`
     width: 50%;
-    border-radius: 10px;
+    cursor: pointer;
+`;
+const FormInputHidden = styled.input`
+    border: 2px solid gray;
+    border-radius: 5px;
+    text-align: center;
+    
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+    
+`;
+const MainImage = styled.img`
+    width: 100%;
 `;
 const DataBox = styled.div`
     padding: 5px;
@@ -80,6 +97,10 @@ const DataBtn = styled.a`
     }
 `;
 const TagBox = styled.div`
+    
+    
+`;
+const TagItemBox = styled.div`
     display: grid;
     grid-template-columns: repeat(3, minmax(50px, 1fr));
     text-align: center;
@@ -190,7 +211,6 @@ const ChallengeManage = (props) => {
     });
     const {id} = useParams(); // 서버에서 받을때 사용
     const location = useLocation(); 
-
     const getData = async() => {
         await challengeApi.challenge(id)
         .then((result) => {
@@ -233,11 +253,9 @@ const ChallengeManage = (props) => {
         console.log('init');
         if(location.state === undefined){
             // axios로 해당 챌린지 정보 받아와야함.
-            console.log('ccc');
             getData();
         } else {
             // 받아온 데이터를 바로 사용
-            console.log('받아온 데이터', location.state);
             setChallenge({
                 ...challenge,
                 assignments:location.state.data.data.assignments,
@@ -258,9 +276,7 @@ const ChallengeManage = (props) => {
         }
     }
     useEffect(init,[]);
-
     console.log('data',challenge);
-
     const onParaSave = async(e) => {
         // console.log('e',e.target);
         const title = document.getElementById('paraTitle').value;
@@ -272,7 +288,6 @@ const ChallengeManage = (props) => {
 
             // 데이터베이스에 적용
             const result = await challengeApi.createParagraphs(paragraphs);
-            console.log('paragraphs 생성 결과',result);
             // 저장한 paragraphs 객체를 받아서 state에 담기
             const tempParagraphs = challenge.paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text});
             setChallenge({
@@ -282,6 +297,91 @@ const ChallengeManage = (props) => {
         } else {
             alert('비어있는 칸을 모두 채워주세요.');
         }
+    }
+    const onSaveTitle = (e) => {
+        setChallenge({
+            ...challenge,
+            title: e.target.value
+        })
+    }
+    const onSaveTag = (e) => {
+        if(e.key === 'Enter'){
+            const inputTag = e.target.value;
+            e.target.value = '';
+            let dup = false;
+            challenge.tags.map((tag) => {
+                if(tag.tag === inputTag){
+                    dup = true;
+                }
+            })
+            if(!dup){
+                 const tempTags = challenge.tags.concat({"id":null, "tag":inputTag});
+                setChallenge({
+                    ...challenge,
+                    tags: tempTags
+                })
+            }
+        }
+    }
+    const onRemoveTag = (e) => {
+        setChallenge({
+            ...challenge,
+            tags: challenge.tags.filter(tag => tag.tag !== e.target.innerHTML)
+        })
+    }
+    const onSaveFile = (e) => {
+        let imageData = e.target.files[0];
+        // 이미지파일인지 검사
+        if(!imageData.type.match("image.*")){
+            alert("이미지 파일만 등록할 수 있습니다.");
+            e.target.value = null;
+            return;
+        }
+        if(imageData.size >= 2097152){
+            alert("2MB 이상의 이미지는 등록할 수 없습니다.");
+            return;
+        }
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById("imgPreview").src = e.target.result;
+        }
+        reader.readAsDataURL(imageData);
+        setChallenge({
+            ...challenge,
+            imageByte: imageData
+        })
+    }
+    const onSaveInfo = async(e) => {
+        e.preventDefault();
+        // title, tags, imageByte, challengeId 값 서버로 전송 
+        if(challenge.title === null){
+            alert("타이틀 정보가 누락되었습니다.");
+        }
+
+        let form = new FormData();
+        form.append("title", challenge.title);
+        form.append("tags", JSON.stringify(challenge.tags));
+        form.append("image", challenge.imageByte);
+        form.append("challengeId", challenge.id);
+
+        // 타이틀, 이미지 유효성, null 체크 만들어야함.
+        const fileConfig = {
+            headers: {
+                'Content-Type': 'Multipart/form-data',
+                'Authorization': localStorage.getItem('AccessToken')
+            }
+        }
+
+        const result = await challengeApi.challengeUpdate(form,fileConfig);
+        console.log('챌린지 정보변경 결과',result);
+        
+        // !! /challenge/manage/{id} 수정필요 + 해당 페이지 만들어야함
+        if(result.data.code === 1){
+            alert('챌린지 정보변경 성공');
+        } else {
+            alert('챌린지 정보변경 실패');
+        }
+
     }
 
     return (
@@ -306,12 +406,15 @@ const ChallengeManage = (props) => {
                         <ErrorStatus>{challenge.error}</ErrorStatus>
                         :
                         <ChallengeForm>
-                            <FormData>
-                                <MainImage src={`data:image/jpeg;base64,${challenge.imageByte}`} />
+                            <FormDataBox>
+                                <ImageBox htmlFor="fileInput">
+                                    <FormInputHidden id="fileInput" onChange={onSaveFile} type="file" name="image" />
+                                    <MainImage src={`data:image/jpeg;base64,${challenge.imageByte}`} id="imgPreview" />
+                                </ImageBox>
                                 <DataBox>
                                     <DataItem>
                                         <DataLabel>타이틀 </DataLabel>
-                                        <DataInput type="text" value={challenge.title}></DataInput>
+                                        <DataInput type="text" value={challenge.title} onChange={onSaveTitle} />
                                     </DataItem>
                                     <DataItem>
                                         <DataLabel>상태 </DataLabel>
@@ -331,16 +434,26 @@ const ChallengeManage = (props) => {
                                     </DataItem>
                                     <DataItem>
                                         <DataLabel>태그</DataLabel>
-                                        <DataInput type="text" placeholder="태그 추가" />
+                                        <DataInput onKeyPress={onSaveTag} type="text" placeholder="태그 추가" />
                                     </DataItem>
                                     <TagBox>
-                                            {challenge.tags.map((tag,index) => 
-                                                <TagItem key={index}>{tag.tag}</TagItem>
-                                            )}
+                                    {
+                                        challenge.tags.length === 0
+                                        ? 
+                                            <div>챌린지와 관련된 태그를 등록하세요.</div>
+                                        :
+                                            <TagItemBox>
+                                                {challenge.tags.map((tag,index) => 
+                                                    <TagItem key={index} onClick={onRemoveTag}>
+                                                        {tag.tag}
+                                                    </TagItem>
+                                                )}
+                                            </TagItemBox>
+                                    }
                                     </TagBox>
-                                    <DataBtn>저장하기</DataBtn>
+                                    <DataBtn onClick={onSaveInfo}>저장하기</DataBtn>
                                 </DataBox>
-                            </FormData>
+                            </FormDataBox>
                             <ParaBox>
                                 <ParaHeader>소개 및 정보 등록</ParaHeader>
                                 <ParaBody>
