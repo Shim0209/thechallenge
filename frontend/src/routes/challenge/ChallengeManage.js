@@ -467,6 +467,19 @@ const ChallengeManage = (props) => {
             const result = await challengeApi.createQuiz(assignmentQuiz);
             console.log('퀴즈 생성 결과', result);
             // state에 담기
+            const findAssign = challenge.assignments.filter(assign => assign.id === assignId);
+            const tempQuiz = findAssign[0].quiz !== null
+                            ? findAssign[0].quiz.concat({"id":result.data.data.id,"quizAnswers":result.data.data.quizAnswers,"quizText":result.data.data.quizText,"collectAnswer":result.data.data.collectAnswer}) 
+                            : {"id":result.data.data.id,"quizAnswers":result.data.data.quizAnswers,"quizText":result.data.data.quizText,"collectAnswer":result.data.data.collectAnswer}
+            findAssign[0].quiz = tempQuiz;
+            const leaveAssign = challenge.assignments.filter(assign => assign.id !== assignId);
+            const tempAssignments = [...findAssign, ...leaveAssign].sort((a,b)=>a.id-b.id);
+            setChallenge({
+                ...challenge,
+                assignments: tempAssignments
+            })
+
+            console.log('테스트 마지막',challenge);
         } else if (isExistAnswer === 0) {
             alert('객관식 문항에 정답이 없습니다.');
         } else {
