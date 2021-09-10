@@ -38,6 +38,8 @@ public class ChallengeAssignment {
 
     private String type; // 제출방식 -> URL, 파일, 퀴즈, TEXT
 
+    private Long passScore; // 최소패스점수
+
     // OneToMany
     @JsonIgnoreProperties({"assignment"})
     @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY)

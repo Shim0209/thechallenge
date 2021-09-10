@@ -30,9 +30,10 @@ public class AssignmentQuiz {
 
 
     private String quizText; // 문제
-    private Long passScore; // 최소패스점수
     private String collectAnswer; // 정답
 
+    // 해당 필드는 ChallengeAssignment로 옮겨야함
+//    private Long passScore; // 최소패스점수
 
     @JsonIgnoreProperties({"assignmentQuiz"})
     @OneToMany(mappedBy = "assignmentQuiz", fetch = FetchType.LAZY)
