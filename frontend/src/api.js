@@ -58,4 +58,8 @@ export const challengeApi = {
         headers: {
             'Authorization': localStorage.getItem('AccessToken')
     }}),
+    createQuiz:(form) => api.post("assignment/quiz/create",form,{
+        headers: {
+            'Authorization': localStorage.getItem('AccessToken')
+    }}),
 }

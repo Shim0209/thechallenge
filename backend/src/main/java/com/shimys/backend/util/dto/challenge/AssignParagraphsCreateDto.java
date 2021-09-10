@@ -14,6 +14,8 @@ public class AssignParagraphsCreateDto {
     private String text;
     @NotBlank(message = "assignId는 필수 입력 값입니다.")
     private Long assignId;
+    // ChallengeAssign의 passScore에 사용
+    private Long passScore;
 
     public AssignmentParagraph toAssignmentParagraphs(ChallengeAssignment challengeAssignment){
         return AssignmentParagraph.builder()

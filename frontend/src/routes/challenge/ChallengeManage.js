@@ -119,6 +119,7 @@ const TagItem = styled.div`
     }
 `;
 const ParaBox = styled.div`
+    border: 2px solid black;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -154,7 +155,7 @@ const ParaTextarea = styled.textarea`
     width: inherit;
 `;
 const ParaBtn = styled.a`
-    border: 1px solid black;
+    border-top: 1px solid black;
     font-weight: 600;
     padding: 5px 0;
     text-align: center;
@@ -162,6 +163,24 @@ const ParaBtn = styled.a`
         background-color: black;
         color: white;
     }
+`;
+const ParaBtn2 = styled.a`
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    font-weight: 600;
+    padding: 5px 0;
+    text-align: center;
+    &:hover{
+        background-color: black;
+        color: white;
+    }
+`;
+const ParaDate = styled.div`
+    text-align: center;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid black;
 `;
 const AssignBox = styled.div`
     margin-top: 10px;
@@ -185,9 +204,10 @@ const AssignItem = styled.a`
     
 `;
 const KeyBox = styled.div`
+    border: 2px solid black;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 5px;
 `;
 
 
@@ -383,15 +403,20 @@ const ChallengeManage = (props) => {
         }
 
     }
-    const onAssignSave = async(e) => {
+    const onAssignParaSave = async(e) => {
         const assignId = parseInt(e.target.id.substr(14));
         const title = document.getElementById('assignParaTitle-'+assignId).value;
         const text = document.getElementById('assignParaText-'+assignId).value;
 
         if(title !== null && text !==null){
-            const assignParagraphs = {"title":title, "text":text, "assignId":assignId};
-            const result = await challengeApi.createAssignParagraphs(assignParagraphs);
+            let score = null;
             const findAssign = challenge.assignments.filter(assign => assign.id === assignId);
+            if(findAssign[0].type === 'quiz'){
+                score = document.getElementById('assignParaScore-'+assignId).value;
+                findAssign[0].passScore = score;
+            }
+            const assignParagraphs = {"title":title, "text":text, "assignId":assignId, "passScore":score};
+            const result = await challengeApi.createAssignParagraphs(assignParagraphs);
             const tempAssignmentsPara = findAssign[0].paragraphs !== null 
                                         ? findAssign[0].paragraphs.concat({"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text})
                                         : {"id":result.data.data.id, "title":result.data.data.title, "text":result.data.data.text};
@@ -410,14 +435,58 @@ const ChallengeManage = (props) => {
         const assignId = parseInt(e.target.id.substr(14));
         const quiz = document.getElementById('assignQuizText-'+assignId).value;
         const answer = document.getElementById('assignQuizAnswer-'+assignId).value;
-        const score = document.getElementById('assignQuizScore-'+assignId).value;
         const questionBox = document.getElementById('assignQuizQuestion-'+assignId);
         console.log('assignId', assignId);
         console.log('quiz', quiz);
         console.log('answer', answer);
-        console.log('score', score);
-        console.log('questionBox', questionBox);
 
+        // 박스아래 생성된 input의 밸류를 전부 가져와서 객체로 만들어서 서버로 보내야함
+        console.log('questionBox', questionBox.children);
+
+        // 객관식 문항 값 추출
+        let questions = [];
+        let isExistAnswer = 0;
+        for(var i=0; i<questionBox.children.length; i++){
+            if(questionBox.children[i].tagName === 'INPUT'){
+                console.log(questionBox.children[i].value);
+                questions = questions !== null 
+                            ? questions.concat({"answerText": questionBox.children[i].value})
+                            : {"answerText": questionBox.children[i].value};
+                if(questionBox.children[i].value === answer){
+                    isExistAnswer += 1;
+                }
+            }
+        }
+        console.log('questions',questions);
+
+        // question 리스트에 정답이 있는지 확인
+        if(isExistAnswer === 1) {
+            // 보낼 객체 만들기
+            const assignmentQuiz = {"quizText":quiz, "collectAnswer":answer, "assignId":assignId, "quizAnswers":JSON.stringify(questions)};
+            // DB저장
+            const result = await challengeApi.createQuiz(assignmentQuiz);
+            console.log('퀴즈 생성 결과', result);
+            // state에 담기
+        } else if (isExistAnswer === 0) {
+            alert('객관식 문항에 정답이 없습니다.');
+        } else {
+            alert('객관식 문항에 한개의 정답만 존재해야 합니다.');
+        }
+
+
+    }
+    const onCreateInputBox = (e) => {
+        const assignId = parseInt(e.target.id.substr(14));
+        const questionBox = document.getElementById('assignQuizQuestion-'+assignId);
+
+        // 추가 <ParaInput type="text" placeholder="객관식 문항을 입력하세요." />
+        // border: none; padding: 5px;
+        var newInput = document.createElement("input");
+        newInput.setAttribute("type","text");
+        newInput.setAttribute("placeholder","객관식 문항을 입력하세요.");
+        newInput.style.border = 'none';
+        newInput.style.padding = '5px';
+        questionBox.appendChild(newInput);
     }
 
 
@@ -514,7 +583,7 @@ const ChallengeManage = (props) => {
                                 {challenge.assignments.map((assign,index) => 
                                     <KeyBox key={index}>
                                         <AssignItem>
-                                            <div>{assign.submitDate.substr(0,10)+' -> 제출방식 : '+assign.type}</div>
+                                            <ParaDate>{assign.submitDate.substr(0,10)+'< type : '+assign.type+' >'}</ParaDate>
                                             <ParaItem>
                                                 <ParaLabel>타이틀</ParaLabel>    
                                                 <ParaInput id={`assignParaTitle-${assign.id}`} type="text" placeholder="타이틀을 작성하세요" />
@@ -523,8 +592,19 @@ const ChallengeManage = (props) => {
                                                 <ParaLabel>내용</ParaLabel>    
                                                 <ParaTextarea id={`assignParaText-${assign.id}`} type="text" placeholder="내용을 작성하세요" rows="7" />
                                             </ParaItem>
+                                            {assign.type === 'quiz' 
+                                            ? 
+                                            <ParaItem>
+                                                <ParaLabel>최소패스점수</ParaLabel>    
+                                                <ParaInput id={`assignParaScore-${assign.id}`}  type="text" placeholder={assign.passScore !== null ? assign.passScore+"점" : "최소 통과점수를 입력하세요."} />
+                                            </ParaItem>
+                                            : ''
+                                            }
                                         </AssignItem>
-                                        <ParaBtn id={`assignParaBtn-${assign.id}`} onClick={onAssignSave}>저장하기</ParaBtn>
+                                        {assign.type === `quiz` 
+                                            ? <ParaBtn2 id={`assignParaBtn-${assign.id}`} onClick={onAssignParaSave}>저장하기</ParaBtn2>
+                                            :<ParaBtn id={`assignParaBtn-${assign.id}`} onClick={onAssignParaSave}>저장하기</ParaBtn>
+                                        }
                                         {assign.type === 'quiz' && 
                                             <>
                                                 <ParaItem>
@@ -535,15 +615,11 @@ const ChallengeManage = (props) => {
                                                     <ParaLabel>정답</ParaLabel>    
                                                     <ParaInput id={`assignQuizAnswer-${assign.id}`} type="text" placeholder="정답을 입력하세요." />
                                                 </ParaItem>
-                                                <ParaItem>
-                                                    <ParaLabel>최소패스점수</ParaLabel>    
-                                                    <ParaInput id={`assignQuizScore-${assign.id}`} type="text" placeholder="최소 패스 점수를 입력하세요." />
-                                                </ParaItem>
                                                 <ParaItem id={`assignQuizQuestion-${assign.id}`}>
                                                     <ParaLabel>객관식문항</ParaLabel>    
                                                     <ParaInput type="text" placeholder="객관식 문항을 입력하세요." />
                                                 </ParaItem>
-                                                <ParaBtn>문항추가하기</ParaBtn>
+                                                <ParaBtn id={`assignQuizBtn-${assign.id}`} onClick={onCreateInputBox}>문항추가하기</ParaBtn>
                                                 <ParaBtn id={`assignQuizBtn-${assign.id}`} onClick={onAssignQuizSave}>저장하기</ParaBtn>
                                             </>
                                         }

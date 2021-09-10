@@ -33,6 +33,10 @@ public class ParagraphsService {
 
     public AssignmentParagraph 과제단란생성(AssignParagraphsCreateDto assignParagraphsCreateDto) {
         ChallengeAssignment challengeAssignmentEntity = challengeAssignmentRepository.findById(assignParagraphsCreateDto.getAssignId()).get();
+        if(assignParagraphsCreateDto.getPassScore() != null){
+            challengeAssignmentEntity.setPassScore(assignParagraphsCreateDto.getPassScore());
+            // DB 적용안해도 되나?
+        }
         AssignmentParagraph assignmentParagraph = assignParagraphsCreateDto.toAssignmentParagraphs(challengeAssignmentEntity);
         return assignmentParagraphRepository.save(assignmentParagraph);
     }
