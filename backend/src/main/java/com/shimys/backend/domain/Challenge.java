@@ -24,7 +24,7 @@ public class Challenge {
 //    @Column(columnDefinition = "MEDIUMTEXT")
 //    private byte[] image;    // 메인이미지 2mb
     private String image;
-    private String status;  // 대기, 진행, 종료
+    private String status;  // 대기, 모집, 진행, 종료
     private LocalDateTime startDate;    // 시작날짜
     private LocalDateTime endDate;      // 끝날짜
     private LocalDateTime createDate;   // 생성날짜

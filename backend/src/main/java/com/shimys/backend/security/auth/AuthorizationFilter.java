@@ -64,4 +64,9 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             throw new TokenExpiredException("JWT 토큰 만료");
         }
     }
+
+    @Override
+    protected void onUnsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        System.out.println("onUnsuccessfulAuthentication 동작 : " + failed.getMessage() + ", " + failed.getClass());
+    }
 }

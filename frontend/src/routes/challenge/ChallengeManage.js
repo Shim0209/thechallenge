@@ -35,7 +35,6 @@ const ShowBox = styled.div`
     overflow: scroll;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
 `;
 const ErrorStatus = styled.div``;
 const ChallengeForm = styled.div`
@@ -194,7 +193,6 @@ const AssignHeader = styled.div`
     padding: 5px;
     background-color: black;
     color: white;
-    margin-bottom: 5px;
 `;
 const AssignBody = styled.div`
     display: flex;
@@ -254,7 +252,7 @@ const ChallengeManage = (props) => {
             })
         })
         .catch((error) => {
-            console.log('에러',error.response);
+            console.log('에러',error);
             if(error.response.data.code === -1){
                 // setState({
                 //     ...state,
@@ -646,10 +644,74 @@ const ChallengeManage = (props) => {
                     </FormBox>
                 }
                     <ShowBox>
-                        <div>챌린지 미리보기 + 챌린지 소개 및 정보</div>
-                        <div>과제 미리보기 + 과제 소개 및 정보</div>
-                        <div>수정완료버튼 눌러야지 데이터 베이스에 저장</div>
-                        <div>저장하기 누르면 state에 값 저장됨. 저장된 값은 미리보기에 x 버튼을 눌러 삭제 가능. 데이터베이스 적용은 수정완료버튼을 눌러야함.</div>
+                    {
+                        challenge.loading
+                        ? 
+                            <ShowBoxLoader>Loading</ShowBoxLoader>
+                        : 
+                            <ShowBoxContainer>
+                                <ShowChallengeInfoBox>
+                                    <InfoTitle>{challenge.title}</InfoTitle>
+                                    <InfoTagBox>
+                                        {challenge.tags.map((tag) => 
+                                            <InfoTag>{tag.tag}</InfoTag>
+                                        )}
+                                    </InfoTagBox>
+                                    <InfoBox>
+                                        <InfoItem>{challenge.status},</InfoItem>
+                                        <InfoItem>D-day {parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'},</InfoItem>
+                                        <InfoItem>{challenge.participants.length}명 대기중</InfoItem>
+                                    </InfoBox>
+                                    <EnterBtn>참여하기</EnterBtn>
+                                </ShowChallengeInfoBox>
+                                <ShowChallengeParaBox>
+                                    <ShowParaBox>
+                                        {challenge.paragraphs.map(para => 
+                                            <ShowPara>
+                                                <ShowParaTitle>{para.title}</ShowParaTitle>
+                                                <ShowParaText>{para.text}</ShowParaText>
+                                            </ShowPara>
+                                        )}
+                                    </ShowParaBox>
+                                </ShowChallengeParaBox>
+                                <ShowChallengeAssignBox>
+                                    <ShowAssignBox>
+                                        {challenge.assignments.map(assign => 
+                                            <ShowAssign>
+                                                <ShowAssignDate>{assign.submitDate.substr(0,10) + '< '+assign.type+' >'}</ShowAssignDate>
+                                                <ShowAssignParaBox>
+                                                    {assign.paragraphs.map(para => 
+                                                        <ShowAssignPara>
+                                                            <ShowAssignParaTitle>{para.title}</ShowAssignParaTitle>
+                                                            <ShowAssignParaText>{para.text}</ShowAssignParaText>
+                                                        </ShowAssignPara>
+                                                    )}
+                                                    {assign.type === 'quiz' &&
+                                                        <ShowAssignQuiz>
+                                                            {assign.quiz.map(item => 
+                                                                <ShowAssignQuizBox>
+                                                                    <ShowAssignQuizText>{item.quizText}</ShowAssignQuizText>
+                                                                    <ShowAssignQuizAnswerBox>
+                                                                        {item.quizAnswers.map(answer =>
+                                                                            <ShowAssignQuizAnswer>
+                                                                                <ShowAssignQuizAnswerInPut type="checkbox" />
+                                                                                <ShowAssignQuizAnswerInPutText>{answer.answerText}</ShowAssignQuizAnswerInPutText>
+                                                                            </ShowAssignQuizAnswer>
+                                                                        )}
+                                                                    </ShowAssignQuizAnswerBox>
+                                                                </ShowAssignQuizBox>
+                                                            )}
+                                                            <ShowAssignQuizAnswerBtn>답안제출</ShowAssignQuizAnswerBtn>
+                                                        </ShowAssignQuiz>
+                                                    }
+                                                </ShowAssignParaBox>
+                                            </ShowAssign>
+                                        )}
+                                    </ShowAssignBox>
+                                </ShowChallengeAssignBox>
+                            </ShowBoxContainer>
+                    }
+                        
                     </ShowBox>
                 </RightBox>
             </Container>
@@ -658,3 +720,152 @@ const ChallengeManage = (props) => {
 }
 
 export default ChallengeManage;
+
+// 미리보기
+const ShowBoxLoader = styled.div``;
+const ShowBoxContainer = styled.div``;
+const ShowChallengeInfoBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fade4b;
+    padding: 30px 0;
+    margin-bottom: 15px;
+`;
+const InfoTitle = styled.div`
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 15px;
+`;
+const InfoTagBox = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+`;
+const InfoTag = styled.div`
+    font-size: 15px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+`;
+const InfoBox = styled.div`
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    color: white;
+    background-color: #0096fb;
+    border: 2px solid #0096fb;
+    border-radius: 5px;
+`;
+const InfoItem = styled.div`
+    padding: 5px;
+`;
+const EnterBtn = styled.div`
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #0096fb;
+    border: 2px solid #0096fb;
+    &:hover {
+        background-color: #0094f6;
+        color: white;
+    }
+`;
+const ShowChallengeParaBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const ShowParaBox = styled.div`
+    padding: 10px 0;
+`;
+const ShowPara = styled.div`
+    margin: 10px;
+    margin-bottom: 30px;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+`;
+const ShowParaTitle = styled.div`
+    font-size: 25px;
+    margin-bottom: 5px;
+`;
+const ShowParaText = styled.div`
+    font-size: 13px;
+    color: gray;
+`;
+const ShowChallengeAssignBox = styled.div`
+    border-top: 2px solid black;
+`;
+const ShowAssignBox = styled.div`
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const ShowAssign = styled.div`
+    margin-bottom: 15px;
+    width: 100%;
+`;
+const ShowAssignDate = styled.div`
+    text-align: center;
+    font-size: 20px;
+    width: 100%;
+    border-bottom: 1px solid gray;
+`;
+const ShowAssignParaBox = styled.div`
+`;
+const ShowAssignPara = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+`;
+const ShowAssignParaTitle = styled.div`
+    font-size: 20px;
+    margin-bottom: 5px;
+`;
+const ShowAssignParaText = styled.div`
+    font-size: 13px;
+    color: gray;
+`;
+const ShowAssignQuiz = styled.div`
+`;
+const ShowAssignQuizBox = styled.div`
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+`;
+const ShowAssignQuizText = styled.div`
+    font-size: 15px;
+    margin-bottom: 5px;
+`;
+const ShowAssignQuizAnswerBox = styled.div`
+`;
+const ShowAssignQuizAnswer = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 5px;
+`;
+const ShowAssignQuizAnswerInPut = styled.input`
+`;
+const ShowAssignQuizAnswerInPutText = styled.div`
+`;
+const ShowAssignQuizAnswerBtn = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #0094f6;
+    color: #0094f6;
+    &:hover{
+        color: white;
+        background-color: #0094f6;
+    }
+`;
