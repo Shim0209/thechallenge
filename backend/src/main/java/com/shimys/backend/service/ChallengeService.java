@@ -100,7 +100,7 @@ public class ChallengeService {
         return challengeEntity;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Challenge> 챌린지찾기(Long challengeId) throws IOException{
         Optional<Challenge> result = challengeRepository.findById(challengeId);
         // 유저 객체 변경
@@ -113,7 +113,7 @@ public class ChallengeService {
         return result;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Challenge> 나의챌린지찾기(Long hostId) throws IOException {
         List<Challenge> result = challengeRepository.findChallengesByHost(hostId);
         return result;

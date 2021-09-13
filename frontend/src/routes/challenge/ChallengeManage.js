@@ -659,8 +659,8 @@ const ChallengeManage = (props) => {
                                     </InfoTagBox>
                                     <InfoBox>
                                         <InfoItem>{challenge.status},</InfoItem>
-                                        <InfoItem>D-day {parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'},</InfoItem>
-                                        <InfoItem>{challenge.participants.length}명 대기중</InfoItem>
+                                        <InfoItem>D-day {parseInt(challenge.startDate.substr(8,10)) - parseInt(new Date().toISOString().substr(8,10))+'일'},</InfoItem>
+                                        <InfoItem>{challenge.participants === null ? '0' : challenge.participants.length}명 대기중</InfoItem>
                                     </InfoBox>
                                     <EnterBtn>참여하기</EnterBtn>
                                 </ShowChallengeInfoBox>
@@ -701,12 +701,12 @@ const ChallengeManage = (props) => {
                                                                     </ShowAssignQuizAnswerBox>
                                                                 </ShowAssignQuizBox>
                                                             )}
-                                                            <ShowAssignQuizAnswerBtn>답안제출</ShowAssignQuizAnswerBtn>
                                                         </ShowAssignQuiz>
                                                     }
                                                 </ShowAssignParaBox>
                                             </ShowAssign>
                                         )}
+                                        <ShowAssignQuizAnswerBtn>답안제출</ShowAssignQuizAnswerBtn>
                                     </ShowAssignBox>
                                 </ShowChallengeAssignBox>
                             </ShowBoxContainer>

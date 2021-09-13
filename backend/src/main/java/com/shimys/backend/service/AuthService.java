@@ -56,7 +56,7 @@ public class AuthService {
      * @param email 이메일 주소
      * @return 인증코드
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer 이메일인증(String email){
         if(userRepository.findByEmail(email) != null){
             return -1;

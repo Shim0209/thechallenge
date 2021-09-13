@@ -140,7 +140,7 @@ const Manage = (props) => {
                                                         <Td>{challenge.id}</Td>
                                                         <Td>{challenge.title}</Td>
                                                         <Td>{challenge.status}</Td>
-                                                        <Td>{parseInt(challenge.endDate.substr(8,10)) - parseInt(challenge.startDate.substr(8,10))+'일'}</Td>
+                                                        <Td>{parseInt(challenge.startDate.substr(8,10)) - parseInt(new Date().toISOString().substr(8,10))+'일'}</Td>
                                                         <Td>{challenge.participants != null ? challenge.participants.length : '0'}</Td>
                                                     </Tr>
                                                 </SLink>

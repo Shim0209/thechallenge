@@ -92,7 +92,6 @@ const DupCheckBtn = styled.a`
 `;
 const CodeBox = styled.div`
     margin-top: 5px;
-    width: 100%;
     display: flex;
     display: none;
     justify-content: space-around;
@@ -104,6 +103,7 @@ const CodeTitle = styled.span`
 const CodeIput = styled.input`
     border: none;
     border-bottom:1px solid gray;
+    text-align: center;
 `;
 const CodeBtn = styled.a`
     align-self: center;
@@ -196,7 +196,7 @@ const Signup = (props) => {
             const rawEmail = emailInput.value;
             
             const result = await authApi.emailcheck(rawEmail);
-
+            
             if(result.data.code === 1){
                 document.getElementsByClassName('codebox')[0].style.display = 'block';
                 emailInput.style.color = 'black';
@@ -209,6 +209,7 @@ const Signup = (props) => {
                     ...check,
                     code:result.data.data
                 })
+                alert(rawEmail + '로 인증번호를 발송했습니다.');
             } else {
                 setMessage('dupemail', false);
                 emailInput.style.border = '2px solid #ED2003';
